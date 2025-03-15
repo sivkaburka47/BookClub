@@ -8,8 +8,25 @@
 import SwiftUI
 
 struct SignInView: View {
+    @State private var email: String = ""
+    @State private var password: String = ""
+    @State private var isPasswordVisible: Bool = false
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            VStack {
+                Spacer()
+                BookCarouselView()
+                Spacer()
+                SignInHeaderView()
+                Spacer()
+                SignInFormView(email: $email, password: $password, isPasswordVisible: $isPasswordVisible)
+                Spacer()
+                SignInButton()
+                Spacer()
+            }
+        }
+        .background(Color("AccentDark"))
     }
 }
 
