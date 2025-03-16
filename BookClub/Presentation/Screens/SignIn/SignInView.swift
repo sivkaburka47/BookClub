@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SignInView: View {
+    @Binding var isSignedIn: Bool
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isPasswordVisible: Bool = false
@@ -22,7 +23,7 @@ struct SignInView: View {
                 Spacer()
                 SignInFormView(email: $email, password: $password, isPasswordVisible: $isPasswordVisible)
                 Spacer()
-                SignInButton()
+                SignInButton(isSignedIn: $isSignedIn)
                 Spacer()
             }
         }
@@ -30,6 +31,6 @@ struct SignInView: View {
     }
 }
 
-#Preview {
-    SignInView()
-}
+//#Preview {
+//    SignInView(isSignedIn: .constant(false))
+//}

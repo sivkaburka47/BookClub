@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct SignInButton: View {
+    @Binding var isSignedIn: Bool
+    
     var body: some View {
         Button(action: {
-            
+            isSignedIn = true
         }) {
             Text("Войти")
         }
