@@ -35,7 +35,12 @@ struct SearchView: View {
                 VStack(alignment: .leading, spacing: 24) {
                     CustomSearchBar(text: $searchText)
                     
-
+                    if searchText.isEmpty {
+                        if !recentRequests.isEmpty {
+                            RecentRequestsView(recentRequests: $recentRequests)
+                        }
+                        
+                    }
                     
                     Spacer().frame(height: 100)
                 }
