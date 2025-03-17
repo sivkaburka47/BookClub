@@ -40,6 +40,10 @@ struct SearchView: View {
                             RecentRequestsView(recentRequests: $recentRequests)
                         }
                         
+                        if !genres.isEmpty {
+                            GenresGridView(genres: genres)
+                        }
+                        
                     }
                     
                     Spacer().frame(height: 100)
