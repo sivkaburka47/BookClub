@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var isSignedIn = true
+    @State private var isSignedIn = false
     @State private var selectedTab: Tab = .library
     
     var body: some View {
