@@ -89,7 +89,7 @@ extension SearchView {
     }
     
     var booksSection: some View {
-        BookListView(books: filteredBooks)
+        BookListView(books: filteredBooks, spacing: 16)
     }
 }
 

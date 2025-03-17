@@ -9,9 +9,10 @@ import SwiftUI
 
 struct BookListView: View {
     let books: [BookCard]
+    let spacing: CGFloat
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: spacing) {
             ForEach(books) { book in
                 BookRowView(book: book)
             }

@@ -12,7 +12,7 @@ struct BookmarksView: View {
         image: "book",
         title: "Код Да Винчи",
         author: "bebrik",
-        activeChapter: 1,
+        activeChapter: 0,
         chapters: ["Пролог", "Глава 1", "Глава 2", "Глава 3"]
     )
     
@@ -24,6 +24,11 @@ struct BookmarksView: View {
         BookCard(image: "book", title: "Война и мир", author: "Лев Толстой")
     ]
     
+    @State private var quotes = [
+        Quote(text: "Я все еще жив", bookTitle: "Код Да Винчи", author: "Дэн Браун"),
+        Quote(text: "Высокий, широкоплечий, с мертвенно-бледной кожей и редкими белыми волосами", bookTitle: "Код Да Винчи", author: "Дэн Браун")
+    ]
+    
     var body: some View {
         ZStack {
             Color("Background")
@@ -32,15 +37,45 @@ struct BookmarksView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     ScreenTitle(text: "Закладки")
-                    CurrentReadingSection(book: book)
-                    VStack(alignment: .leading, spacing: 8) {
-                        SectionTitle(text: "Избранные книги")
-                        BookListView(books: books)
-                    }
+                    currentReadingSection
+                    favoritesSection
+                    quotesSection
                     Spacer().frame(height: 100)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
+            }
+        }
+    }
+}
+
+extension BookmarksView {
+    var currentReadingSection: some View {
+        Group {
+            CurrentReadingSection(book: book)
+        }
+    }
+    
+    var favoritesSection: some View {
+        Group {
+            if !books.isEmpty {
+                VStack(alignment: .leading, spacing: 16) {
+                    SectionTitle(text: "Избранные книги")
+                    BookListView(books: books, spacing: 8)
+                    
+                }
+            }
+        }
+    }
+    
+    var quotesSection: some View {
+        Group {
+            if !quotes.isEmpty {
+                VStack(alignment: .leading, spacing: 16) {
+                    SectionTitle(text: "Цитаты")
+                    QuotesListView(quotes: quotes)
+                    
+                }
             }
         }
     }
