@@ -44,6 +44,9 @@ struct SearchView: View {
                             GenresGridView(genres: genres)
                         }
                         
+                        if !authors.isEmpty {
+                            AuthorsListView(authors: authors)
+                        }
                     }
                     
                     Spacer().frame(height: 100)
