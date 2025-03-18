@@ -13,8 +13,8 @@ struct MovieDetailsView: View {
         title: "Код Да Винчи",
         author: "Дэн Браун",
         description: ["Секретный код скрыт в работах Леонардо да Винчи...", "Только он поможет найти христианские святыни, дающие немыслимые власть и могущество...", "Ключ к величайшей тайне, над которой человечество билось веками, наконец может быть найден..."],
-        activeChapter: 0,
-        chapters: ["Пролог", "Глава 1", "Глава 2", "Глава 3"]
+        activeChapter: 1,
+        chapters: ["Факты", "Пролог", "Глава 1", "Глава 2", "Глава 3", "Глава 4", "Глава 5", "Глава 6", "Глава 7"]
     )
     
     var body: some View {
@@ -47,6 +47,11 @@ struct MovieDetailsView: View {
                             SectionTitle(text: "Прочитано")
                             ProgressLine(progress: book.progress)
                         }
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        SectionTitle(text: "Оглавление")
+                        ChaptersList(chapters: book.chapters, activeChapter: book.activeChapter)
                     }
                     
                     Spacer().frame(height: 100)
