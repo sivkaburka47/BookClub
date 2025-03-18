@@ -36,6 +36,12 @@ struct MovieDetailsView: View {
                         AdditionalText(text: book.author)
                     }
                     
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(book.description, id: \.self) { line in
+                            AdditionalText(text: line)
+                        }
+                    }
+                    
                     
                     Spacer().frame(height: 100)
                 }
