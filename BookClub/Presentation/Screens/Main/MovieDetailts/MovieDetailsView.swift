@@ -42,6 +42,12 @@ struct MovieDetailsView: View {
                         }
                     }
                     
+                    if book.activeChapter != nil {
+                        VStack(alignment: .leading, spacing: 16) {
+                            SectionTitle(text: "Прочитано")
+                            ProgressLine(progress: book.progress)
+                        }
+                    }
                     
                     Spacer().frame(height: 100)
                 }
