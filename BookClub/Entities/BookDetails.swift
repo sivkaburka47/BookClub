@@ -12,15 +12,35 @@ struct BookDetails: Identifiable {
     let image: String
     let title: String
     let author: String
-    let activeChapter: Int
+    let description: [String]
+    let activeChapter: Int?
     let chapters: [String]
     
     var currentChapter: String {
-        guard activeChapter >= 0, activeChapter < chapters.count else { return "Неизвестная глава" }
+        guard let activeChapter = activeChapter, activeChapter >= 0, activeChapter < chapters.count else {
+            return "Неизвестная глава"
+        }
         return chapters[activeChapter]
     }
     
     var progress: Double {
-        return chapters.isEmpty ? 0 : Double(activeChapter + 1) / Double(chapters.count)
+        guard let activeChapter = activeChapter, !chapters.isEmpty else { return 0 }
+        return Double(activeChapter + 1) / Double(chapters.count)
+    }
+    
+    init(
+        image: String,
+        title: String,
+        author: String,
+        description: [String] = [],
+        activeChapter: Int? = nil,
+        chapters: [String] = []
+    ) {
+        self.image = image
+        self.title = title
+        self.author = author
+        self.description = description
+        self.activeChapter = activeChapter
+        self.chapters = chapters
     }
 }

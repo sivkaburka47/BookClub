@@ -36,7 +36,7 @@ struct BookmarksView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    ScreenTitle(text: "Закладки")
+                    ScreenTitle(text: "Закладки", style: .red)
                     currentReadingSection
                     favoritesSection
                     quotesSection
