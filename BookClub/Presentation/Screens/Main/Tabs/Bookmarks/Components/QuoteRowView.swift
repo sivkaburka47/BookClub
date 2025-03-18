@@ -13,7 +13,10 @@ struct QuoteRowView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(quote.text)
-                .font(.custom("georgiai", size: 16))
+                .font(
+                    .custom("Georgia", size: 16)
+                    .italic()
+                )
                 .foregroundColor(Color("Black"))
                 .lineSpacing(16 * 0.5)
 
