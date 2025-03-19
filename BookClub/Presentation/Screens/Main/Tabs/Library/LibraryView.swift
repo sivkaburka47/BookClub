@@ -41,22 +41,20 @@ struct LibraryView: View {
             
             ScrollView {
                 VStack(alignment: .leading){
-                    Text("Библиотека")
-                        .font(.custom("AlumniSans-Bold", size: 48))
-                        .textCase(.uppercase)
-                        .foregroundColor(Color("Secondary"))
+                    ScreenTitle(text: "Библиотека", style: .red)
                     
                     VStack(alignment: .leading, spacing: 16) {
                         SectionTitle(text: "Новинки")
                     }
-                    
                     
                     VStack(alignment: .leading, spacing: 16) {
                         SectionTitle(text: "Популярные книги")
                         
                         LazyVGrid(columns: columns, spacing: 16) {
                             ForEach(cards) { card in
-                                CardView(cardImage: card.image, title: card.title, author: card.author)
+                                NavigationLink(destination: MovieDetailsView()) {
+                                    CardView(cardImage: card.image, title: card.title, author: card.author)
+                                }
                             }
                         }
                     }
@@ -68,6 +66,7 @@ struct LibraryView: View {
                 .padding(.horizontal, 16)
             }
         }
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 

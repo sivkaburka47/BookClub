@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MovieDetailsView: View {
+    @Environment(\.dismiss) var dismiss
+    
     let book = BookDetails(
         image: "bookCoverDetails",
         title: "Код Да Винчи",
@@ -16,6 +18,8 @@ struct MovieDetailsView: View {
         activeChapter: 1,
         chapters: ["Факты", "Пролог", "Глава 1", "Глава 2", "Глава 3", "Глава 4", "Глава 5", "Глава 6", "Глава 7"]
     )
+    
+    
     
     var body: some View {
         ZStack {
@@ -61,6 +65,12 @@ struct MovieDetailsView: View {
             }
             .ignoresSafeArea()
             
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                CustomBackButton(dismiss: dismiss)
+            }
         }
     }
 }

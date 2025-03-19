@@ -13,24 +13,27 @@ struct ContentView: View {
     
     var body: some View {
         if isSignedIn {
-            ZStack {
-                Group {
-                    switch selectedTab {
-                    case .library: LibraryView()
-                    case .search: SearchView()
-                    case .player: PlayerView()
-                    case .bookmarks: BookmarksView()
-                    case .logout: EmptyView()
+            NavigationView{
+                ZStack {
+                    Group {
+                        switch selectedTab {
+                        case .library: LibraryView()
+                        case .search: SearchView()
+                        case .player: MovieDetailsView()
+                        case .bookmarks: BookmarksView()
+                        case .logout: EmptyView()
+                        }
+                    }
+                    
+                    VStack {
+                        Spacer()
+                        CustomTabBar(selectedTab: $selectedTab) {
+                            isSignedIn = false
+                            selectedTab = .library
+                        }
                     }
                 }
-                
-                VStack {
-                    Spacer()
-                    CustomTabBar(selectedTab: $selectedTab) {
-                        isSignedIn = false
-                        selectedTab = .library
-                    }
-                }
+                .toolbarBackground(.hidden, for: .navigationBar)
             }
         } else {
             SignInView(isSignedIn: $isSignedIn)
