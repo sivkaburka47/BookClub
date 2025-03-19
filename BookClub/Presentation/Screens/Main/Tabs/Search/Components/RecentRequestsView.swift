@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecentRequestsView: View {
     @Binding var recentRequests: [String]
+    var onRequestSelected: (String) -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -38,6 +39,9 @@ struct RecentRequestsView: View {
                     .padding(.vertical, 4)
                     .background(Color("AccentLight"))
                     .cornerRadius(8)
+                    .onTapGesture {
+                        onRequestSelected(request)
+                    }
                 }
             }
         }

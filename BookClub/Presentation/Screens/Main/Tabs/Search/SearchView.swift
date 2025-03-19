@@ -75,7 +75,9 @@ extension SearchView {
     var recentRequestsSection: some View {
         Group {
             if !recentRequests.isEmpty {
-                RecentRequestsView(recentRequests: $recentRequests)
+                RecentRequestsView(recentRequests: $recentRequests) { selectedRequest in
+                    searchText = selectedRequest
+                }
             }
         }
     }
