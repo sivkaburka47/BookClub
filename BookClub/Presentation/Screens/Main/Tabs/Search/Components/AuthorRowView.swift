@@ -17,9 +17,7 @@ struct AuthorRowView: View {
                 .frame(width: 48, height: 48)
                 .clipShape(Circle())
             
-            Text(author.name)
-                .font(Font.custom("VelaSans-Regular", size: 16))
-                .frame(maxWidth: .infinity, alignment: .leading)
+            SecondaryText(text: author.name, lineHeight: 1, size: 16)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
@@ -27,3 +25,4 @@ struct AuthorRowView: View {
         .cornerRadius(8)
     }
 }
+

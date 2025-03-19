@@ -39,9 +39,9 @@ struct CustomSearchBar: View {
         .padding(.horizontal, 16)
         .frame(height: 44)
         .background(Color("White"))
-        .cornerRadius(12)
+        .cornerRadius(10)
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 10)
                 .stroke(Color("AccentMedium"), lineWidth: 1)
         )
     }

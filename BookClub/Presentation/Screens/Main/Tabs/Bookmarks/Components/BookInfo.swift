@@ -14,10 +14,7 @@ struct BookInfo: View {
         VStack(alignment: .leading, spacing: 16) {
             VStack(alignment: .leading) {
                 SectionTitle(text: book.title)
-                Text(book.currentChapter)
-                    .font(.custom("VelaSans-Regular", size: 14))
-                    .foregroundColor(Color("AccentDark"))
-                    .lineSpacing(14 * 0.5)
+                SecondaryBoldText(text: book.currentChapter, lineHeight: 1.5, size: 14)
             }
             
             ProgressView(value: book.progress)

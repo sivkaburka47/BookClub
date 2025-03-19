@@ -21,9 +21,7 @@ struct GenresGridView: View {
             
             LazyVGrid(columns: columns, spacing: 8) {
                 ForEach(genres, id: \.self) { genre in
-                    Text(genre)
-                        .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(Color("AccentDark"))
+                    SecondaryText(text: genre, lineHeight: 1.142, size: 14)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(16)
                         .background(Color("AccentLight"))

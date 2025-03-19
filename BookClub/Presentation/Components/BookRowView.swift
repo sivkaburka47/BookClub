@@ -17,12 +17,9 @@ struct BookRowView: View {
                 .frame(width: 80, height: 126)
                 .cornerRadius(4)
 
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 0) {
                 SectionTitle(text: book.title)
-                Text(book.author)
-                    .font(.custom("VelaSans-Regular", size: 14))
-                    .foregroundColor(Color("AccentDark"))
-                    .lineSpacing(14 * 0.5)
+                SecondaryText(text: book.author, lineHeight: 1.5, size: 14)
             }
         }
     }

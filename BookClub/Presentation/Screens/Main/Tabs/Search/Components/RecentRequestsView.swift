@@ -22,10 +22,7 @@ struct RecentRequestsView: View {
                             .foregroundColor(Color("AccentDark"))
                             .frame(width: 24, height: 24)
                         
-                        Text(request)
-                            .font(Font.custom("VelaSans-Regular", size: 14))
-                            .foregroundColor(Color("AccentDark"))
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                        SecondaryText(text: request, lineHeight: 1.142, size: 14)
                         
                         Button(action: {
                             recentRequests.removeAll { $0 == request }
