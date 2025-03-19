@@ -10,10 +10,7 @@ import SwiftUI
 struct SignInHeaderView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("открой для себя")
-                .font(.custom("AlumniSans-Bold", size: 48))
-                .textCase(.uppercase)
-                .foregroundColor(Color("AccentLight"))
+            ScreenTitle(text: "открой для себя", style: .light)
             
             Text("книжный мир")
                 .font(.custom("AlumniSans-Bold", size: 96))

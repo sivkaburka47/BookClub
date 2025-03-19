@@ -47,18 +47,12 @@ struct LibraryView: View {
                         .foregroundColor(Color("Secondary"))
                     
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Новинки")
-                            .font(.custom("AlumniSans-Bold", size: 24))
-                            .textCase(.uppercase)
-                            .foregroundColor(Color("AccentDark"))
+                        SectionTitle(text: "Новинки")
                     }
                     
                     
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Популярные книги")
-                            .font(.custom("AlumniSans-Bold", size: 24))
-                            .textCase(.uppercase)
-                            .foregroundColor(Color("AccentDark"))
+                        SectionTitle(text: "Популярные книги")
                         
                         LazyVGrid(columns: columns, spacing: 16) {
                             ForEach(cards) { card in

@@ -31,6 +31,6 @@ struct SignInView: View {
     }
 }
 
-//#Preview {
-//    SignInView(isSignedIn: .constant(false))
-//}
+#Preview {
+    SignInView(isSignedIn: .constant(false))
+}

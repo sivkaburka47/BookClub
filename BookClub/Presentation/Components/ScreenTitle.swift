@@ -11,6 +11,7 @@ struct ScreenTitle: View {
     enum TitleStyle {
         case red
         case darkGreen
+        case light
     }
     
     let text: String
@@ -20,6 +21,17 @@ struct ScreenTitle: View {
         Text(text)
             .font(.custom("AlumniSans-Bold", size: 48))
             .textCase(.uppercase)
-            .foregroundColor(style == .red ? Color("Secondary") : Color("AccentDark"))
+            .foregroundColor(color(for: style))
+    }
+    
+    private func color(for style: TitleStyle) -> Color {
+        switch style {
+        case .red:
+            return Color("Secondary")
+        case .darkGreen:
+            return Color("AccentDark")
+        case .light:
+            return Color("AccentLight")
+        }
     }
 }
