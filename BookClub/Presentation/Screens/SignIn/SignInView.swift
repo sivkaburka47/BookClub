@@ -13,6 +13,10 @@ struct SignInView: View {
     @State private var password: String = ""
     @State private var isPasswordVisible: Bool = false
     
+    private var isFormValid: Bool {
+        !email.isEmpty && !password.isEmpty
+    }
+    
     var body: some View {
         ZStack {
             VStack {
@@ -23,7 +27,8 @@ struct SignInView: View {
                 Spacer()
                 SignInFormView(email: $email, password: $password, isPasswordVisible: $isPasswordVisible)
                 Spacer()
-                SignInButton(isSignedIn: $isSignedIn)
+                SignInButton(isSignedIn: $isSignedIn, isFormValid: isFormValid)
+                
                 Spacer()
             }
         }
