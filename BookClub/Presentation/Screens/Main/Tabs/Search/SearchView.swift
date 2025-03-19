@@ -22,16 +22,21 @@ struct SearchView: View {
         Author(image: "book", name: "Братья Стругацкие"),
         Author(image: "book", name: "Дэн Браун"),
         Author(image: "book", name: "Федор Достоевский"),
-        Author(image: "book", name: "Эйнштейн"),
+        Author(image: "book", name: "Альберт Эйнштейн"),
         Author(image: "book", name: "Лев Толстой")
     ]
     
     @State private var books = [
-        BookCard(image: "book", title: "Пикник на обочине", author: "Братья Стругацкие"),
-        BookCard(image: "book", title: "Код да Винчи", author: "Дэн Браун"),
-        BookCard(image: "book", title: "Преступление и наказание", author: "Федор Достоевский"),
-        BookCard(image: "book", title: "Мир как он есть", author: "Альберт Эйнштейн"),
-        BookCard(image: "book", title: "Война и мир", author: "Лев Толстой")
+        BookCard(image: "book", title: "Программирование на SWIFT для IOS", authors: ["Братья Стругацкие"], genres: ["Фантастика", "Приключения"]),
+        BookCard(image: "book", title: "Код да Винчи", authors: ["Дэн Браун"], genres: ["Детектив", "Триллер"]),
+        BookCard(image: "book", title: "Преступление и наказание", authors: ["Федор Достоевский"], genres: ["Классика", "Детектив"]),
+        BookCard(image: "book", title: "Мир как он есть", authors: ["Альберт Эйнштейн"], genres: ["Биография", "Научпоп"]),
+        BookCard(image: "book", title: "Война и мир", authors: ["Лев Толстой"], genres: ["Классика", "Исторический роман"]),
+        BookCard(image: "book", title: "Гарри Поттер и философский камень", authors: ["Джоан Роулинг"], genres: ["Фэнтези", "Приключения"]),
+        BookCard(image: "book", title: "Шерлок Холмс", authors: ["Артур Конан Дойл"], genres: ["Детектив", "Классика"]),
+        BookCard(image: "book", title: "1984", authors: ["Джордж Оруэлл"], genres: ["Фантастика", "Антиутопия"]),
+        BookCard(image: "book", title: "Анна Каренина", authors: ["Лев Толстой"], genres: ["Классика", "Любовный роман"]),
+        BookCard(image: "book", title: "Дюна", authors: ["Фрэнк Герберт"], genres: ["Фантастика", "Приключения"])
     ]
 
     var body: some View {
@@ -61,13 +66,20 @@ struct SearchView: View {
 
 extension SearchView {
     var filteredBooks: [BookCard] {
-        books.filter { $0.title.lowercased().contains(searchText.lowercased()) }
+        books.filter { book in
+            let searchLowercased = searchText.lowercased()
+            return book.title.lowercased().contains(searchLowercased) ||
+                   book.authors.contains { $0.lowercased().contains(searchLowercased) } ||
+                   book.genres.contains { $0.lowercased().contains(searchLowercased) }
+        }
     }
     
     var genresSection: some View {
         Group {
             if !genres.isEmpty {
-                GenresGridView(genres: genres)
+                GenresGridView(genres: genres) { selectedGenre in
+                    searchText = selectedGenre
+                }
             }
         }
     }
@@ -85,7 +97,9 @@ extension SearchView {
     var authorsSection: some View {
         Group {
             if !authors.isEmpty {
-                AuthorsListView(authors: authors)
+                AuthorsListView(authors: authors) { selectedAuthor in
+                    searchText = selectedAuthor
+                }
             }
         }
     }

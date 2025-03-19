@@ -9,6 +9,7 @@ import SwiftUI
 
 struct GenresGridView: View {
     let genres: [String]
+    var onGenreSelected: (String) -> Void
     
     let columns = [
         GridItem(.flexible(), spacing: 8),
@@ -26,6 +27,9 @@ struct GenresGridView: View {
                         .padding(16)
                         .background(Color("AccentLight"))
                         .cornerRadius(8)
+                        .onTapGesture {
+                            onGenreSelected(genre)
+                        }
                 }
             }
         }

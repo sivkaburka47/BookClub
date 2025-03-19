@@ -19,7 +19,7 @@ struct BookRowView: View {
 
             VStack(alignment: .leading, spacing: 0) {
                 SectionTitle(text: book.title)
-                SecondaryText(text: book.author, lineHeight: 1.5, size: 14)
+                SecondaryText(text: book.authors.joined(separator: ", "), lineHeight: 1.5, size: 14)
             }
         }
     }

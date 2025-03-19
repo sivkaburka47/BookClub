@@ -15,23 +15,15 @@ struct LibraryView: View {
     ]
     
     let cards: [BookCard] = [
-        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", author: "Эрик Мария Ремарк"),
-        BookCard(image: "Cover_2", title: "Мастер и Маргарита", author: "Михаил Булгаков"),
-        BookCard(image: "Cover_3", title: "Преступление и наказание", author: "Фёдор Достоевский"),
-        BookCard(image: "Cover_2", title: "Три товарища", author: "Эрих Мария Ремарк"),
-        BookCard(image: "Cover_1", title: "Маленький принц", author: "Антуан де Сент-Экзюпери"),
-        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", author: "Эрик Мария Ремарк"),
-        BookCard(image: "Cover_2", title: "Мастер и Маргарита", author: "Михаил Булгаков"),
-        BookCard(image: "Cover_3", title: "Преступление и наказание", author: "Фёдор Достоевский"),
-        BookCard(image: "Cover_2", title: "Три товарища", author: "Эрих Мария Ремарк"),
-        BookCard(image: "Cover_1", title: "Маленький принц", author: "Антуан де Сент-Экзюпери"),
-        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", author: "Эрик Мария Ремарк"),
-        BookCard(image: "Cover_2", title: "Мастер и Маргарита", author: "Михаил Булгаков"),
-        BookCard(image: "Cover_3", title: "Преступление и наказание", author: "Фёдор Достоевский"),
-        BookCard(image: "Cover_2", title: "Три товарища", author: "Эрих Мария Ремарк"),
-        BookCard(image: "Cover_1", title: "Маленький принц", author: "Антуан де Сент-Экзюпери"),
-        BookCard(image: "Cover_2", title: "Сто лет одиночества", author: "Габриэль Гарсиа Маркес"),
-        BookCard(image: "Cover_3", title: "Преступление и наказание", author: "Фёдор Достоевский")
+        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
+        BookCard(image: "Cover_2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков", "Эрик Мария Ремарк"]),
+        BookCard(image: "Cover_3", title: "Преступление и наказание", authors: ["Фёдор Достоевский"]),
+        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
+        BookCard(image: "Cover_2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков"]),
+        BookCard(image: "Cover_3", title: "Преступление и наказание", authors: ["Фёдор Достоевский"]),
+        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
+        BookCard(image: "Cover_2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков"]),
+        BookCard(image: "Cover_3", title: "Преступление и наказание", authors: ["Фёдор Достоевский", "Эрик Мария Ремарк"])
     ]
     
     var body: some View {
@@ -53,7 +45,7 @@ struct LibraryView: View {
                         LazyVGrid(columns: columns, spacing: 16) {
                             ForEach(cards) { card in
                                 NavigationLink(destination: MovieDetailsView()) {
-                                    CardView(cardImage: card.image, title: card.title, author: card.author)
+                                    CardView(cardImage: card.image, title: card.title, authors: card.authors)
                                 }
                             }
                         }

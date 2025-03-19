@@ -22,6 +22,7 @@ struct ScreenTitle: View {
             .font(.custom("AlumniSans-Bold", size: 48))
             .textCase(.uppercase)
             .foregroundColor(color(for: style))
+            .multilineTextAlignment(.leading)
     }
     
     private func color(for style: TitleStyle) -> Color {

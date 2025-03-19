@@ -15,6 +15,7 @@ struct SectionTitle: View {
             .font(.custom("AlumniSans-Bold", size: 24))
             .textCase(.uppercase)
             .foregroundColor(Color("AccentDark"))
+            .multilineTextAlignment(.leading)
     }
 }
 

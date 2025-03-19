@@ -10,7 +10,7 @@ import SwiftUI
 struct CardView: View {
     let cardImage: String
     let title: String
-    let author: String
+    let authors: [String]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -26,7 +26,7 @@ struct CardView: View {
                     .foregroundColor(Color("Secondary"))
                     .multilineTextAlignment(.leading)
                 
-                Text(author)
+                Text(authors.joined(separator: ", "))
                     .font(.custom("VelaSans-Regular", size: 10))
                     .foregroundColor(Color("AccentDark"))
                     .multilineTextAlignment(.leading)

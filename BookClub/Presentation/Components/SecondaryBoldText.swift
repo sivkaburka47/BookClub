@@ -16,6 +16,7 @@ struct SecondaryBoldText: View {
         Text(text)
             .font(Font.custom("VelaSans-Bold", size: size))
             .foregroundColor(Color("AccentDark"))
+            .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
             .lineSpacing(size * (lineHeight / 100) - size)
     }
