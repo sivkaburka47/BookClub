@@ -25,6 +25,7 @@ struct PlayerButton: View {
                         .foregroundColor(.white)
                 )
         }
+        .contentShape(Circle())
         .offset(y: -10)
         .zIndex(1)
     }

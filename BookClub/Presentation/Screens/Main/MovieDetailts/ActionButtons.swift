@@ -10,7 +10,7 @@ import SwiftUI
 struct ActionButtons: View {
     var body: some View {
         HStack(spacing: 8) {
-            Button(action: {}) {
+            NavigationLink(destination: ChapterView()) {
                 HStack(alignment: .center, spacing: 8) {
                     Image("Play")
                         .renderingMode(.template)

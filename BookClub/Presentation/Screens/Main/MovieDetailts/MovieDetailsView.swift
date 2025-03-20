@@ -72,6 +72,7 @@ struct MovieDetailsView: View {
                 CustomBackButton(dismiss: dismiss)
             }
         }
+        .toolbarBackground(.hidden, for: .navigationBar)
     }
 }
 
