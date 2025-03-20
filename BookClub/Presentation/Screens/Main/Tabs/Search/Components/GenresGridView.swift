@@ -30,6 +30,7 @@ struct GenresGridView: View {
                     let rowIndex = index / columns.count
                     
                     SecondaryText(text: genre, lineHeight: 1.142, size: 14)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(16)
                         .background(GeometryReader { proxy in
                             Color.clear

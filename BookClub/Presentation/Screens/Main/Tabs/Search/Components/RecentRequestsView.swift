@@ -24,6 +24,7 @@ struct RecentRequestsView: View {
                             .frame(width: 24, height: 24)
                         
                         SecondaryText(text: request, lineHeight: 1.142, size: 14)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
                         Button(action: {
                             recentRequests.removeAll { $0 == request }

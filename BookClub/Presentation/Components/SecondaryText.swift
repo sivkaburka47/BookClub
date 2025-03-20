@@ -17,7 +17,6 @@ struct SecondaryText: View {
             .font(Font.custom("VelaSans-Regular", size: size))
             .foregroundColor(Color("AccentDark"))
             .multilineTextAlignment(.leading)
-            .frame(maxWidth: .infinity, alignment: .leading)
             .lineSpacing(size * (lineHeight / 100) - size)
     }
 }

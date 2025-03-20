@@ -18,6 +18,7 @@ struct AuthorRowView: View {
                 .clipShape(Circle())
             
             SecondaryText(text: author.name, lineHeight: 1, size: 16)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
