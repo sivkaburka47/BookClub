@@ -20,12 +20,14 @@ struct ChapterRow: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             if isActive {
-                Image("ReadingNow")
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(Color("AccentDark"))
+                NavigationLink(destination: ChapterView()){
+                    Image("ReadingNow")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(Color("AccentDark"))
+                }
             } else if isRead {
                 Image("Read")
                     .renderingMode(.template)

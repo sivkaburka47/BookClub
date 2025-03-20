@@ -11,11 +11,7 @@ struct PlayerButton: View {
     @Binding var selectedTab: Tab
     
     var body: some View {
-        Button {
-            withAnimation(.spring()) {
-                selectedTab = .player
-            }
-        } label: {
+        NavigationLink(destination: ChapterView()) {
             Circle()
                 .foregroundColor(Color("Secondary"))
                 .frame(width: 80, height: 80)

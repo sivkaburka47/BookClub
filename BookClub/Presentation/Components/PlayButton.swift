@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PlayButton: View {
     var body: some View {
-        Button(action: {}) {
+        NavigationLink(destination: ChapterView()) {
             ZStack {
                 Circle()
                     .fill(Color("AccentDark"))
