@@ -13,7 +13,8 @@ struct BookInfo: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             VStack(alignment: .leading) {
-                SectionTitle(text: book.title)
+                Text(book.title)
+                    .h2TextStyle()
                 SecondaryBoldText(text: book.currentChapter, lineHeight: 1.5, size: 14)
             }
             

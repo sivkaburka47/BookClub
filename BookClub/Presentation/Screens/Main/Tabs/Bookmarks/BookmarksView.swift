@@ -36,7 +36,10 @@ struct BookmarksView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    ScreenTitle(text: "Закладки", style: .red)
+                    Text("Закладки")
+                        .h1TextStyle()
+                        .foregroundColor(Color("Secondary"))
+                    
                     currentReadingSection
                     favoritesSection
                     quotesSection
@@ -60,7 +63,8 @@ extension BookmarksView {
         Group {
             if !books.isEmpty {
                 VStack(alignment: .leading, spacing: 16) {
-                    SectionTitle(text: "Избранные книги")
+                    Text("Избранные книги")
+                        .h2TextStyle()
                     BookListView(books: books, spacing: 8)
                     
                 }
@@ -72,7 +76,8 @@ extension BookmarksView {
         Group {
             if !quotes.isEmpty {
                 VStack(alignment: .leading, spacing: 16) {
-                    SectionTitle(text: "Цитаты")
+                    Text("Цитаты")
+                        .h2TextStyle()
                     QuotesListView(quotes: quotes)
                     
                 }

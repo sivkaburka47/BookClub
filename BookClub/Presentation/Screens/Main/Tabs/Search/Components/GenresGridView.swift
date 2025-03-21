@@ -19,7 +19,8 @@ struct GenresGridView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            SectionTitle(text: "Жанры")
+            Text("Жанры")
+                .h2TextStyle()
             
             LazyVGrid(columns: columns, spacing: 8) {
                 let indexedGenres = Array(genres.enumerated())

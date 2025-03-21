@@ -15,8 +15,8 @@ struct ChapterRow: View {
     var body: some View {
         HStack {
             Text(chapter)
-                .font(Font.custom(isActive ? "VelaSans-Bold" : "VelaSans-Regular", size: 16))
-                .foregroundColor(Color("AccentDark"))
+                .font(.custom(isActive ? "VelaSans-Bold" : "VelaSans-Regular", size: 16))
+                .bodyTextStyle()
                 .frame(maxWidth: .infinity, alignment: .leading)
             
             if isActive {

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct LibraryView: View {
     var columns: [GridItem] = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
+        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 16),
         GridItem(.flexible())
     ]
     
@@ -32,15 +32,19 @@ struct LibraryView: View {
                 .ignoresSafeArea()
             
             ScrollView {
-                VStack(alignment: .leading){
-                    ScreenTitle(text: "Библиотека", style: .red)
+                VStack(alignment: .leading, spacing: 24){
+                    Text("Библиотека")
+                        .h1TextStyle()
+                        .foregroundColor(Color("Secondary"))
                     
                     VStack(alignment: .leading, spacing: 16) {
-                        SectionTitle(text: "Новинки")
+                        Text("Новинки")
+                            .h2TextStyle()
                     }
                     
                     VStack(alignment: .leading, spacing: 16) {
-                        SectionTitle(text: "Популярные книги")
+                        Text("Популярные книги")
+                            .h2TextStyle()
                         
                         LazyVGrid(columns: columns, spacing: 16) {
                             ForEach(cards) { card in
@@ -50,11 +54,8 @@ struct LibraryView: View {
                             }
                         }
                     }
-                    
-                    
                     Spacer().frame(height: 100)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
             }
         }

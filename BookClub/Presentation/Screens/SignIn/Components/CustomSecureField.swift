@@ -16,8 +16,8 @@ struct CustomSecureField: View {
         GeometryReader { geometry in
             HStack {
                 Text(title)
-                    .font(.custom("VelaSans-Regular", size: 14))
                     .foregroundColor(Color("AccentMedium"))
+                    .bodySmallTextStyle()
                 Spacer()
                 Group {
                     if isPasswordVisible {
@@ -26,8 +26,8 @@ struct CustomSecureField: View {
                         SecureField("", text: $text)
                     }
                 }
-                .font(.custom("VelaSans-Regular", size: 14))
                 .foregroundColor(Color("AccentLight"))
+                .bodySmallTextStyle()
                 .frame(width: geometry.size.width * 0.5 + (!text.isEmpty ? 0 : 24))
                 if !text.isEmpty {
                     Button(action: { isPasswordVisible.toggle() }) {

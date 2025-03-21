@@ -13,7 +13,8 @@ struct RecentRequestsView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            SectionTitle(text: "Недавние запросы")
+            Text("Недавние запросы")
+                .h2TextStyle()
             
             VStack(alignment: .leading, spacing: 8) {
                 ForEach(recentRequests, id: \.self) { request in

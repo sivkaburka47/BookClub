@@ -21,8 +21,7 @@ struct CustomSearchBar: View {
             
             TextField("", text: $text, prompt: Text("Поиск по книгам")
                 .foregroundColor(Color("AccentMedium")))
-                .font(.custom("VelaSans-Regular", size: 16))
-                .foregroundColor(Color("AccentDark"))
+                .bodyTextStyle()
             
             if !text.isEmpty {
                 Button(action: {

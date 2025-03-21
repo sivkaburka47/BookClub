@@ -16,23 +16,26 @@ struct CardView: View {
         VStack(alignment: .leading, spacing: 8) {
             Image(cardImage)
                 .resizable()
-                .aspectRatio(contentMode: .fill)
+                .aspectRatio(contentMode: .fit)
                 .clipped()
                 .cornerRadius(4)
             
-            VStack(alignment: .leading){
+            VStack(alignment: .leading, spacing: 4){
                 Text(title)
-                    .font(.custom("AlumniSans-Bold", size: 14))
-                    .foregroundColor(Color("Secondary"))
+                    .font(Font.custom("AlumniSans-Bold", size: 14))
+                    .foregroundColor(Color("AccentDark"))
+                    .textCase(.uppercase)
                     .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Text(authors.joined(separator: ", "))
                     .font(.custom("VelaSans-Regular", size: 10))
                     .foregroundColor(Color("AccentDark"))
                     .multilineTextAlignment(.leading)
-                Spacer()
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxHeight: .infinity)
+            Spacer()
         }
+        
     }
 }

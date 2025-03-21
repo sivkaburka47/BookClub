@@ -19,8 +19,6 @@ struct MovieDetailsView: View {
         chapters: ["Факты", "Пролог", "Глава 1", "Глава 2", "Глава 3", "Глава 4", "Глава 5", "Глава 6", "Глава 7"]
     )
     
-    
-    
     var body: some View {
         ZStack {
             Color("Background")
@@ -36,25 +34,31 @@ struct MovieDetailsView: View {
                 VStack(alignment: .leading, spacing: 25) {
                     
                     VStack(alignment: .leading, spacing: 8) {
-                        ScreenTitle(text: book.title, style: .darkGreen)
-                        AdditionalText(text: book.author)
+                        Text(book.title)
+                            .h1TextStyle()
+                            .foregroundColor(Color("AccentDark"))
+                        Text(book.author)
+                            .bodyTextStyle()
                     }
                     
                     VStack(alignment: .leading, spacing: 8) {
                         ForEach(book.description, id: \.self) { line in
-                            AdditionalText(text: line)
+                            Text(line)
+                                .bodyTextStyle()
                         }
                     }
                     
                     if book.activeChapter != nil {
                         VStack(alignment: .leading, spacing: 16) {
-                            SectionTitle(text: "Прочитано")
+                            Text("Прочитано")
+                                .h2TextStyle()
                             ProgressLine(progress: book.progress)
                         }
                     }
                     
                     VStack(alignment: .leading, spacing: 8) {
-                        SectionTitle(text: "Оглавление")
+                        Text("Оглавление")
+                            .h2TextStyle()
                         ChaptersList(chapters: book.chapters, activeChapter: book.activeChapter)
                     }
                     

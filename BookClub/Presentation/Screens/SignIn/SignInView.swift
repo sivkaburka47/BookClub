@@ -28,7 +28,6 @@ struct SignInView: View {
                 SignInFormView(email: $email, password: $password, isPasswordVisible: $isPasswordVisible)
                 Spacer()
                 SignInButton(isSignedIn: $isSignedIn, isFormValid: isFormValid)
-                
                 Spacer()
             }
         }

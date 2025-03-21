@@ -13,7 +13,8 @@ struct AuthorsListView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            SectionTitle(text: "Авторы")
+            Text("Авторы")
+                .h2TextStyle()
             
             VStack(alignment: .leading, spacing: 8) {
                 ForEach(authors, id: \.name) { author in

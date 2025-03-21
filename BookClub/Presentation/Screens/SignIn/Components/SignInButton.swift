@@ -17,18 +17,19 @@ struct SignInButton: View {
                 isSignedIn = true
             }) {
                 Text("Войти")
-                    .font(.custom("VelaSans-Bold", size: 16))
+                    .font(Font.custom("VelaSans-Bold", size: 16))
                     .foregroundColor(isFormValid ? Color("AccentDark") : Color("AccentLight"))
+                    .bodyTextStyle()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
             .disabled(!isFormValid)
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
-            .frame(maxWidth: .infinity,maxHeight: .infinity, alignment: .center)
             .background(isFormValid ? Color("White") : Color("AccentMedium"))
             .cornerRadius(12)
         }
         .padding(.horizontal, 16)
-        .frame(height: 50)
+        .frame(maxHeight: 50)
     }
     
 }

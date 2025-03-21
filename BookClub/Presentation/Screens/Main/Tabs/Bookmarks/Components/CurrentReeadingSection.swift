@@ -13,7 +13,8 @@ struct CurrentReadingSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                SectionTitle(text: "Читаете сейчас")
+                Text("Читаете сейчас")
+                    .h2TextStyle()
                 Spacer()
                 PlayButton()
             }
