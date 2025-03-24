@@ -40,7 +40,7 @@ struct MovieDetailsView: View {
 }
 
 // MARK: View Components
-extension MovieDetailsView {
+private extension MovieDetailsView {
     @ViewBuilder
     var headerSection: some View {
         VStack(spacing: 0) {

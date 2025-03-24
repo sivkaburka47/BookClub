@@ -53,7 +53,7 @@ struct BookmarksView: View {
 }
 
 // MARK: View Components
-extension BookmarksView {
+private extension BookmarksView {
     @ViewBuilder
     var currentReadingSection: some View {
         VStack(alignment: .leading, spacing: 8) {

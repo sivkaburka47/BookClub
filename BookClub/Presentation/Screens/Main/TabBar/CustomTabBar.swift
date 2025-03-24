@@ -40,7 +40,7 @@ struct CustomTabBar: View {
 }
 
 // MARK: View Components
-extension CustomTabBar {
+private extension CustomTabBar {
     @ViewBuilder
     func logoutButton(action: @escaping () -> Void) -> some View {
         Button(action: action) {

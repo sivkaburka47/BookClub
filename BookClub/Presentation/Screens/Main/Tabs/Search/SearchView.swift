@@ -84,8 +84,12 @@ private extension SearchView {
     var genresSection: some View {
         Group {
             if !genres.isEmpty {
-                GenresGridView(genres: genres) { selectedGenre in
-                    searchText = selectedGenre
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Жанры")
+                        .h2TextStyle()
+                    GenresGridView(genres: genres) { selectedGenre in
+                        searchText = selectedGenre
+                    }
                 }
             }
         }

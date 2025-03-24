@@ -38,7 +38,7 @@ struct SignInView: View {
 }
 
 // MARK: View Components
-extension SignInView {
+private extension SignInView {
     @ViewBuilder
     var bookCarouselView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
