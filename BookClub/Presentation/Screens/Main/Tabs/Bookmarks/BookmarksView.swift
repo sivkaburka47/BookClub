@@ -52,13 +52,29 @@ struct BookmarksView: View {
     }
 }
 
+// MARK: View Components
 extension BookmarksView {
+    @ViewBuilder
     var currentReadingSection: some View {
-        Group {
-            CurrentReadingSection(book: book)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Читаете сейчас")
+                    .h2TextStyle()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                PlayButton()
+            }
+            
+            HStack(spacing: 16) {
+                BookCover(image: book.image)
+                VStack(alignment: .leading, spacing: 16) {
+                    bookInfo(for: book)
+                    ProgressLine(progress: book.progress)
+                }
+            }
         }
     }
     
+    @ViewBuilder
     var favoritesSection: some View {
         Group {
             if !books.isEmpty {
@@ -66,24 +82,55 @@ extension BookmarksView {
                     Text("Избранные книги")
                         .h2TextStyle()
                     BookListView(books: books, spacing: 8)
-                    
                 }
             }
         }
     }
     
+    @ViewBuilder
     var quotesSection: some View {
         Group {
             if !quotes.isEmpty {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Цитаты")
                         .h2TextStyle()
-                    QuotesListView(quotes: quotes)
-                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(quotes) { quote in
+                            quoteRow(for: quote)
+                        }
+                    }
                 }
             }
         }
     }
+    
+    @ViewBuilder
+    func quoteRow(for quote: Quote) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(quote.text)
+                .quoteTextStyle()
+            
+            Text("\(quote.bookTitle) • \(quote.author)")
+                .footnoteTextStyle()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .background(Color("AccentLight"))
+        .cornerRadius(8)
+    }
+    
+    @ViewBuilder
+    func bookInfo(for book: BookDetails) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(book.title)
+                .h2TextStyle()
+            Text(book.currentChapter)
+                .font(Font.custom("VelaSans-Bold", size: 14))
+                .bodySmallTextStyle()
+        }
+    }
+    
 }
 
 #Preview {

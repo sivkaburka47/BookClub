@@ -49,7 +49,7 @@ struct LibraryView: View {
                         LazyVGrid(columns: columns, spacing: 16) {
                             ForEach(cards) { card in
                                 NavigationLink(destination: MovieDetailsView()) {
-                                    CardView(cardImage: card.image, title: card.title, authors: card.authors)
+                                    cardView(cardImage: card.image, title: card.title, authors: card.authors)
                                 }
                             }
                         }
@@ -62,6 +62,53 @@ struct LibraryView: View {
         .toolbar(.hidden, for: .navigationBar)
     }
 }
+
+// MARK: View Components
+private extension LibraryView {
+    @ViewBuilder
+    func cardView(cardImage: String, title: String, authors: [String]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            imageSection(imageName: cardImage)
+            textContentSection(title: title, authors: authors)
+            Spacer()
+        }
+    }
+    
+    @ViewBuilder
+    func imageSection(imageName: String) -> some View {
+        Image(imageName)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .clipped()
+            .cornerRadius(4)
+    }
+    
+    @ViewBuilder
+    func textContentSection(title: String, authors: [String]) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            titleLabel(text: title)
+            authorsLabel(authors: authors)
+        }
+    }
+    
+    @ViewBuilder
+    func titleLabel(text: String) -> some View {
+        Text(text)
+            .font(Font.custom("AlumniSans-Bold", size: 14))
+            .foregroundColor(Color("AccentDark"))
+            .textCase(.uppercase)
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    @ViewBuilder
+    func authorsLabel(authors: [String]) -> some View {
+        Text(authors.joined(separator: ", "))
+            .footnoteTextStyle()
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
 
 #Preview {
     LibraryView()

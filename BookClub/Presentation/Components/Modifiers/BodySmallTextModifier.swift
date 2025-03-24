@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BodySmallTextModifier: ViewModifier {
     let size: CGFloat = 14
-    let lineHeight: CGFloat = 1.3
+    let lineHeight: CGFloat = 1
     
     func body(content: Content) -> some View {
         let uiFont = UIFont(name: "VelaSans-Regular", size: size) ?? UIFont.systemFont(ofSize: size)

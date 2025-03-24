@@ -13,10 +13,7 @@ struct CustomSearchBar: View {
     var body: some View {
         HStack(spacing: 8) {
             if text.isEmpty {
-                Image("Search")
-                    .renderingMode(.template)
-                    .foregroundColor(Color("AccentMedium"))
-                    .frame(width: 20, height: 20)
+                CustomIcon(name: "Search", size: 20, color: Color("AccentMedium"))
             }
             
             TextField("", text: $text, prompt: Text("Поиск по книгам")
@@ -24,14 +21,8 @@ struct CustomSearchBar: View {
                 .bodyTextStyle()
             
             if !text.isEmpty {
-                Button(action: {
-                    text = ""
-                }) {
-                    Image("Close")
-                        .renderingMode(.template)
-                        .foregroundColor(Color("AccentDark"))
-                        .frame(width: 24, height: 24)
-                }
+                CustomIcon(name: "Close", size: 24, color: Color("AccentDark"))
+                    .onTapGesture { text = "" }
             }
         }
         .padding(.vertical, 7)

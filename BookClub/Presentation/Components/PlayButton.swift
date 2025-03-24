@@ -15,11 +15,7 @@ struct PlayButton: View {
                     .fill(Color("AccentDark"))
                     .frame(width: 34, height: 34)
                 
-                Image("Play")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(.white)
+                CustomIcon(name: "Play", size: 16, color: Color("White"))
             }
         }
     }

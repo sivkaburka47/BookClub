@@ -19,12 +19,7 @@ struct CustomBackButton: View {
     var body: some View {
         Button(action: { dismiss() }) {
             HStack(spacing: 6) {
-                Image("ArrowLeft")
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(textColor)
+                CustomIcon(name: "ArrowLeft", size: 24, color: textColor)
                 
                 Text("Назад")
                     .font(.system(size: 17))

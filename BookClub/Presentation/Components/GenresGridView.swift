@@ -12,11 +12,6 @@ struct GenresGridView: View {
     var onGenreSelected: (String) -> Void
     @State private var rowHeights: [Int: CGFloat] = [:]
     
-    let columns: [GridItem] = [
-        GridItem(.flexible(), spacing: 8),
-        GridItem(.flexible(), spacing: 8)
-    ]
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Жанры")
@@ -25,12 +20,13 @@ struct GenresGridView: View {
             LazyVGrid(columns: columns, spacing: 8) {
                 let indexedGenres = Array(genres.enumerated())
                 
-                ForEach(indexedGenres, id: \.element) { item in
+                ForEach(indexedGenres, id: \ .element) { item in
                     let index = item.offset
                     let genre = item.element
                     let rowIndex = index / columns.count
                     
-                    SecondaryText(text: genre, lineHeight: 1.142, size: 14)
+                    Text(genre)
+                        .bodySmallTextStyle()
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(16)
                         .background(GeometryReader { proxy in
@@ -55,3 +51,11 @@ struct GenresGridView: View {
     }
 }
 
+private extension GenresGridView {
+    var columns: [GridItem] {
+        [
+            GridItem(.flexible(), spacing: 8),
+            GridItem(.flexible(), spacing: 8)
+        ]
+    }
+}

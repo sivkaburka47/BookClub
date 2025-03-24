@@ -54,16 +54,16 @@ struct ChapterView: View {
                 
                 HStack {
                     HStack (spacing: 8) {
-                        CustomIcon(name: "Previous", size: 24, color: "White")
+                        CustomIcon(name: "Previous", size: 24, color: Color("White"))
                             .padding(8)
                         
-                        CustomIcon(name: "Contents", size: 24, color: "White")
+                        CustomIcon(name: "Contents", size: 24, color: Color("White"))
                             .padding(8)
                         
-                        CustomIcon(name: "Next", size: 24, color: "White")
+                        CustomIcon(name: "Next", size: 24, color: Color("White"))
                             .padding(8)
                         
-                        CustomIcon(name: "Settings", size: 24, color: "White")
+                        CustomIcon(name: "Settings", size: 24, color: Color("White"))
                             .padding(8)
                     }
                     Spacer()
@@ -74,11 +74,7 @@ struct ChapterView: View {
                             .fill(Color("AccentLight"))
                             .frame(width: 50, height: 50)
                             .overlay(
-                                CustomIcon(
-                                    name: isPlaying ? "Pause" : "Play",
-                                    size: 24,
-                                    color: "AccentDark"
-                                )
+                                CustomIcon(name: isPlaying ? "Pause" : "Play", size: 24, color: Color("AccentDark"))
                             )
                     }
                     
@@ -86,8 +82,6 @@ struct ChapterView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
             }
-            
-            
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -99,7 +93,8 @@ struct ChapterView: View {
                 VStack {
                     Text("Код Да Винчи")
                         .h2TextStyle()
-                    SecondaryText(text: "Пролог", lineHeight: 1.5, size: 14)
+                    Text("Пролог")
+                        .bodySmallTextStyle()
                 }
             }
         }

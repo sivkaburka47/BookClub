@@ -62,9 +62,12 @@ struct SearchView: View {
             }
         }
     }
+    
+    
 }
 
-extension SearchView {
+// MARK: - Properties
+private extension SearchView {
     var filteredBooks: [BookCard] {
         books.filter { book in
             let searchLowercased = searchText.lowercased()
@@ -73,7 +76,11 @@ extension SearchView {
                    book.genres.contains { $0.lowercased().contains(searchLowercased) }
         }
     }
-    
+}
+
+// MARK: View Components
+private extension SearchView {
+    @ViewBuilder
     var genresSection: some View {
         Group {
             if !genres.isEmpty {
@@ -84,26 +91,86 @@ extension SearchView {
         }
     }
     
+    @ViewBuilder
     var recentRequestsSection: some View {
         Group {
             if !recentRequests.isEmpty {
-                RecentRequestsView(recentRequests: $recentRequests) { selectedRequest in
-                    searchText = selectedRequest
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Недавние запросы")
+                        .h2TextStyle()
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(recentRequests, id: \.self) { request in
+                            recentRequestRow(for: request)
+                        }
+                    }
                 }
             }
         }
     }
     
+    @ViewBuilder
+    func recentRequestRow(for request: String) -> some View {
+        HStack {
+            CustomIcon(name: "History", size: 24, color: Color("AccentDark"))
+            Text(request)
+                .bodySmallTextStyle()
+                .frame(maxWidth: .infinity, alignment: .leading)
+            CustomIcon(name: "Close", size: 24, color: Color("AccentDark"))
+                .padding(8)
+                .onTapGesture {
+                    recentRequests.removeAll { $0 == request }
+                }
+        }
+        .padding(.leading, 16)
+        .padding(.trailing, 4)
+        .padding(.vertical, 4)
+        .background(Color("AccentLight"))
+        .cornerRadius(8)
+        .onTapGesture {
+            searchText = request
+        }
+    }
+    
+    @ViewBuilder
     var authorsSection: some View {
         Group {
             if !authors.isEmpty {
-                AuthorsListView(authors: authors) { selectedAuthor in
-                    searchText = selectedAuthor
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Авторы")
+                        .h2TextStyle()
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        ForEach(authors, id: \.name) { author in
+                            authorRowView(for: author)
+                                .onTapGesture {
+                                    searchText = author.name
+                                }
+                        }
+                    }
                 }
             }
         }
     }
     
+    @ViewBuilder
+    func authorRowView(for author: Author) -> some View {
+        HStack(alignment: .center, spacing: 12) {
+            Image(author.image)
+                .resizable()
+                .frame(width: 48, height: 48)
+                .clipShape(Circle())
+            
+            Text(author.name)
+                .bodyTextStyle()
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Color("AccentLight"))
+        .cornerRadius(8)
+    }
+    
+    @ViewBuilder
     var booksSection: some View {
         BookListView(books: filteredBooks, spacing: 16)
     }

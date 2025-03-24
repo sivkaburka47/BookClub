@@ -10,7 +10,7 @@ import SwiftUI
 struct CustomIcon: View {
     let name: String
     let size: CGFloat
-    let color: String
+    let color: Color
     
     var body: some View {
         Image(name)
@@ -18,6 +18,6 @@ struct CustomIcon: View {
             .resizable()
             .scaledToFit()
             .frame(width: size, height: size)
-            .foregroundColor(Color(color))
+            .foregroundColor(color)
     }
 }

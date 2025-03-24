@@ -16,17 +16,14 @@ struct BookRowView: View {
                 .resizable()
                 .frame(width: 80, height: 126)
                 .cornerRadius(4)
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(book.title)
                     .h2TextStyle()
-                SecondaryText(text: book.authors.joined(separator: ", "), lineHeight: 1.5, size: 14)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-//                Spacer()
-//                Text(book.authors.joined(separator: ", "))
-//                    .h2TextStyle()
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .background(Color("Secondary").opacity(0.2))
+                
+                Text(book.authors.joined(separator: ", "))
+                    .bodySmallTextStyle()
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }
