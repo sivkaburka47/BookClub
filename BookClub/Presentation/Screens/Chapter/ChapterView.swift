@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ChapterView: View {
     
+    @State private var timer: DispatchSourceTimer?
     @Environment(\.dismiss) var dismiss
     @State private var isPlaying = false
     @State private var currentTime: Double = 0.0
@@ -119,6 +120,18 @@ struct ChapterView: View {
                         })
                         .onPreferenceChange(ViewOffsetKey.self) { newOffset in
                             offset = newOffset
+                            if isPlaying {
+                                isUserScrolling = true
+                                scrollDebounceTimer?.invalidate()
+                                scrollDebounceTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { _ in
+                                    isUserScrolling = false
+                                    withAnimation(.easeInOut(duration: 0.5)) {
+                                        if currentParagraphIndex >= 0 {
+                                            scrollProxy.scrollTo(currentParagraphIndex, anchor: .center)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     .coordinateSpace(name: "scroll")
@@ -157,9 +170,11 @@ struct ChapterView: View {
                     .padding(.vertical, 16)
                     .background(Color("Background"))
                     .onChange(of: currentParagraphIndex) { _ in
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            if currentParagraphIndex >= 0 {
-                                scrollProxy.scrollTo(currentParagraphIndex, anchor: .center)
+                        if isPlaying && !isUserScrolling {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                if currentParagraphIndex >= 0 {
+                                    scrollProxy.scrollTo(currentParagraphIndex, anchor: .center)
+                                }
                             }
                         }
                     }
@@ -208,17 +223,31 @@ struct ChapterView: View {
         }
         .toolbarBackground(Color("Background"), for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
-        .onReceive(Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()) { _ in
-            if isPlaying {
-                currentTime += 0.1
-                updateCurrentIndices()
-                if currentTime > bookParagraphs.last!.lines.last!.time + 2 {
-                    isPlaying = false
-                    currentTime = 0.0
-                    currentParagraphIndex = -1
-                    currentLineIndex = -1
+        .onAppear {
+            let timer = DispatchSource.makeTimerSource(queue: DispatchQueue.global(qos: .userInitiated))
+            timer.schedule(deadline: .now(), repeating: 0.1)
+            timer.setEventHandler {
+                if isPlaying {
+                    let newTime = currentTime + 0.1
+                    DispatchQueue.main.async {
+                        currentTime = newTime
+                        print(currentTime)
+                        updateCurrentIndices()
+                        if currentTime > bookParagraphs.last!.lines.last!.time + 2 {
+                            isPlaying = false
+                            currentTime = 0.0
+                            currentParagraphIndex = -1
+                            currentLineIndex = -1
+                        }
+                    }
                 }
             }
+            timer.resume()
+            self.timer = timer
+        }
+        .onDisappear {
+            timer?.cancel()
+            timer = nil
         }
     }
             
