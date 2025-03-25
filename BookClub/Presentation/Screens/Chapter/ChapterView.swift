@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChapterView: View {
-    
+    @State private var isShowingSheet = false
     @State private var timer: DispatchSourceTimer?
     @Environment(\.dismiss) var dismiss
     @State private var isPlaying = false
@@ -20,6 +20,12 @@ struct ChapterView: View {
     @State private var offset = CGFloat.zero
     private var parsedBookParagraphs: [BookParagraph] {
         BookTextParser().parse(rawText: rawText)
+    }
+    
+    @State private var activeChapter: Int = 1
+    
+    var rawText: String {
+        chapters[activeChapter].text
     }
     
     var body: some View {
@@ -113,7 +119,7 @@ struct ChapterView: View {
                 VStack {
                     Text("Код Да Винчи")
                         .h2TextStyle()
-                    Text("Пролог")
+                    Text(chapters[activeChapter].title)
                         .bodySmallTextStyle()
                 }
             }
@@ -146,6 +152,19 @@ struct ChapterView: View {
             timer?.cancel()
             timer = nil
         }
+        .onChange(of: activeChapter) { _ in
+            currentTime = 0.0
+            currentParagraphIndex = -1
+            currentLineIndex = -1
+            isPlaying = false
+        }
+        .sheet(isPresented: $isShowingSheet) {
+            SideSheetView(chapters: chapters, activeChapter: $activeChapter, isShowingSheet: $isShowingSheet)
+                .presentationDetents([.fraction(1.0)])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(Color("Background"))
+                .presentationCornerRadius(8)
+        }
     }
 }
 
@@ -177,16 +196,60 @@ private extension ChapterView {
     @ViewBuilder
     var optionButtons: some View {
         HStack(spacing: 8) {
+            previuousChapterButton
+            contentsButton
+            nextChapterButton
+            settingsButton
+        }
+    }
+    
+    @ViewBuilder
+    var previuousChapterButton: some View {
+        Button(action: {
+            if activeChapter > 0 {
+                activeChapter -= 1
+            }
+        }) {
             CustomIcon(name: "Previous", size: 24, color: Color("White"))
                 .padding(8)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    @ViewBuilder
+    var contentsButton: some View {
+        Button(action: {
+            isShowingSheet.toggle()
+        }) {
             CustomIcon(name: "Contents", size: 24, color: Color("White"))
                 .padding(8)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    @ViewBuilder
+    var nextChapterButton: some View {
+        Button(action: {
+            if activeChapter < chapters.count - 1 {
+                activeChapter += 1
+            }
+        }) {
             CustomIcon(name: "Next", size: 24, color: Color("White"))
                 .padding(8)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    @ViewBuilder
+    var settingsButton: some View {
+        Button(action: {
+        }) {
             CustomIcon(name: "Settings", size: 24, color: Color("White"))
                 .padding(8)
         }
+        .buttonStyle(PlainButtonStyle())
     }
+
     
     @ViewBuilder
     var playButton: some View {
@@ -207,8 +270,15 @@ private extension ChapterView {
 
 // MARK: Data and Parsing
 private extension ChapterView {
-    var rawText: String {
-        """
+    var chapters: [Chapter] {
+        [
+            Chapter(
+                title: "Факты",
+                text: "(0.0) Здесь будет текст первой главы, описывающий основные концепции и введение в тему."
+            ),
+            Chapter(
+                title: "Пролог",
+                text:         """
         (0.0) *Париж, Лувр*
         
         (2.0) *21.46*
@@ -267,7 +337,43 @@ private extension ChapterView {
         
         (100.0) — Ложь! — Мужчина был неподвижен и смотрел на него немигающим взором страшных глаз, в которых поблескивали красные искорки.
         """
+            ),
+            Chapter(
+                title: "Глава 1",
+                text:         """
+        (0.0) *Париж, Лувр*
+        
+        (2.0) *21.46*
+        
+        (4.0) Знаменитый куратор Жак Соньер, пошатываясь, прошел под сводчатой аркой Большой галереи и устремился к первой попавшейся ему на глаза картине — полотну Караваджо.
+        (8.0) Ухватился руками за позолоченную раму и стал тянуть ее на себя, пока шедевр не сорвался со стены и не рухнул на семидесятилетнего старика Соньера, погребя его под собой.
+        
+        (12.0) Как и предполагал Соньер, неподалеку с грохотом опустилась металлическая решетка, преграждающая доступ в этот зал.
+        (14.0) Паркетный пол содрогнулся.
+        (15.0) Где-то завыла сирена сигнализации.
+        
+        (16.0) Несколько секунд куратор лежал неподвижно, хватая ртом воздух и пытаясь сообразить, на каком свете находится.
+        (19.0) *Я все еще жив.*
+        (21.0) Потом он выполз из-под полотна и начал судорожно озираться в поисках места, где можно спрятаться.
+        
+        (23.0) Голос прозвучал неожиданно близко:
+        
+        (25.0) — Не двигаться.
+        
+        (27.0) Стоявший на четвереньках куратор похолодел, потом медленно обернулся.
+        (30.0) Всего в пятнадцати футах от него, за решеткой, высилась внушительная и грозная фигура его преследователя.
+        (33.0) Белки розовые, а зрачки угрожающего темно красного цвета.
+        (33.0) Альбинос достал из кармана пистолет, сунул длинный ствол в отверстие между железными прутьями и прицелился в куратора.
+        
+        (36.0) — Ты не должен бежать, — произнес он с трудно определимым акцентом.
+        (39.0) — А теперь говори: где оно?
+        
+        (42.0) — Ложь! — Мужчина был неподвижен и смотрел на него немигающим взором страшных глаз, в которых поблескивали красные искорки.
+        """
+            )
+        ]
     }
+    
 }
 
 // MARK: Helpers Methods
@@ -301,7 +407,7 @@ private extension ChapterView {
             }
             
             if isPlaying && paragraphIndex == currentParagraphIndex && lineIndex == currentLineIndex {
-                lineContent.foregroundColor = .red
+                lineContent.foregroundColor = Color("Secondary")
             }
             
             result += lineContent

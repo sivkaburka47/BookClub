@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct CustomBackButton: View {
     let dismiss: DismissAction
     let style: BackButtonStyle
