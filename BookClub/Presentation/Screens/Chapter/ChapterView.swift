@@ -39,7 +39,7 @@ struct ChapterView: View {
             VStack(spacing: 0) {
                 ScrollViewReader { scrollProxy in
                     ScrollView {
-                        VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading, spacing: paddingSize * 2.6) {
                             chapterText
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
