@@ -8,10 +8,19 @@
 import SwiftUI
 
 struct LibraryView: View {
+    @State private var scrollPosition: Int?
+    
     var columns: [GridItem] = [
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible())
+    ]
+    
+    let carouselCards: [BookCard] = [
+        BookCard(image: "Cover_4", title: "Рассвет хайпа", authors: ["Эрик Мария Ремарк"], description: "Долгожданное продолжение Голодных игр"),
+        BookCard(image: "bookCoverDetails", title: "Хайп окончен", authors: ["Эрик Мария Ремарк"], description: "НеДолгожданное продолжение Голодных игр"),
+        BookCard(image: "Cover_1", title: "Дедлайн близко", authors: ["Эрик Мария Ремарк"], description: "Долгожданное продолжение Голодных игр"),
+        BookCard(image: "Cover_2", title: "Крутая история", authors: ["Эрик Мария Ремарк"], description: "Долгожданное окончание Голодных игр")
     ]
     
     let cards: [BookCard] = [
@@ -40,6 +49,8 @@ struct LibraryView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Новинки")
                             .h2TextStyle()
+                        
+                        carouselCovers
                     }
                     
                     VStack(alignment: .leading, spacing: 16) {
@@ -65,6 +76,53 @@ struct LibraryView: View {
 
 // MARK: View Components
 private extension LibraryView {
+    @ViewBuilder
+    var carouselCovers: some View {
+        GeometryReader { geometry in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(0..<carouselCards.count, id: \.self) { index in
+                        let card = carouselCards[index]
+                        
+                        ZStack(alignment: .bottomLeading) {
+                            Image(card.image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: geometry.size.width - 112, height: 256)
+                                .clipped()
+                                .cornerRadius(4)
+                            
+                            imageText(description: card.description, title: card.title)
+                            .padding(.bottom, 16)
+                        }
+                        .frame(width: geometry.size.width - 112, height: 256)
+                    }
+                }
+                .scrollTargetLayout()
+                .padding(.horizontal, 56)
+            }
+            .scrollTargetBehavior(.viewAligned)
+        }
+        .frame(height: 256)
+    }
+    
+    @ViewBuilder
+    func imageText(description: String?, title: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(description ?? "")
+                .foregroundColor(Color("White"))
+                .bodySmallTextStyle()
+                .lineLimit(2)
+            
+            Text(title)
+                .foregroundColor(Color("White"))
+                .h2TextStyle()
+                .lineLimit(2)
+            
+        }
+        .padding(.horizontal, 16)
+    }
+    
     @ViewBuilder
     func cardView(cardImage: String, title: String, authors: [String]) -> some View {
         VStack(alignment: .leading, spacing: 8) {

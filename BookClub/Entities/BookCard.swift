@@ -13,11 +13,13 @@ struct BookCard: Identifiable {
     let title: String
     let authors: [String]
     let genres: [String]
+    let description: String?
     
-    init(image: String = "", title: String = "", authors: [String] = [], genres: [String] = []) {
+    init(image: String = "", title: String = "", authors: [String] = [], genres: [String] = [], description: String? = nil) {
         self.image = image
         self.title = title
         self.authors = authors
         self.genres = genres
+        self.description = description
     }
 }
