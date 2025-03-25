@@ -80,26 +80,28 @@ private extension LibraryView {
     var carouselCovers: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(0..<carouselCards.count, id: \.self) { index in
-                        let card = carouselCards[index]
-                        
-                        ZStack(alignment: .bottomLeading) {
-                            Image(card.image)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: geometry.size.width - 112, height: 256)
-                                .clipped()
-                                .cornerRadius(4)
+                NavigationLink(destination: MovieDetailsView()){
+                    HStack(spacing: 8) {
+                        ForEach(0..<carouselCards.count, id: \.self) { index in
+                            let card = carouselCards[index]
                             
-                            imageText(description: card.description, title: card.title)
-                            .padding(.bottom, 16)
+                            ZStack(alignment: .bottomLeading) {
+                                Image(card.image)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: geometry.size.width - 112, height: 256)
+                                    .clipped()
+                                    .cornerRadius(4)
+                                
+                                imageText(description: card.description, title: card.title)
+                                .padding(.bottom, 16)
+                            }
+                            .frame(width: geometry.size.width - 112, height: 256)
                         }
-                        .frame(width: geometry.size.width - 112, height: 256)
                     }
+                    .scrollTargetLayout()
+                    .padding(.horizontal, 56)
                 }
-                .scrollTargetLayout()
-                .padding(.horizontal, 56)
             }
             .scrollTargetBehavior(.viewAligned)
         }
