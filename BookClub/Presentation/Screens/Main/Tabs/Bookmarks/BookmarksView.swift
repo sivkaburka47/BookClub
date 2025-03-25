@@ -64,11 +64,13 @@ private extension BookmarksView {
                 PlayButton()
             }
             
-            HStack(spacing: 16) {
-                BookCover(image: book.image)
-                VStack(alignment: .leading, spacing: 16) {
-                    bookInfo(for: book)
-                    ProgressLine(progress: book.progress)
+            NavigationLink(destination: MovieDetailsView()) {
+                HStack(spacing: 16) {
+                    BookCover(image: book.image)
+                    VStack(alignment: .leading, spacing: 16) {
+                        bookInfo(for: book)
+                        ProgressLine(progress: book.progress)
+                    }
                 }
             }
         }

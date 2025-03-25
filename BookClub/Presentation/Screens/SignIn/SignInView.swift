@@ -8,6 +8,7 @@ import SwiftUI
 
 struct SignInView: View {
     @State private var offset: CGFloat = 0
+    @State private var keyboardHeight: CGFloat = 0
     let bookCovers = Array(repeating: "book", count: 5)
     
     @Binding var isSignedIn: Bool
@@ -32,8 +33,24 @@ struct SignInView: View {
                 signInButton
                 Spacer()
             }
+            .padding(.bottom, keyboardHeight)
+            .animation(.easeOut, value: keyboardHeight)
         }
         .background(Color("AccentDark"))
+        .onTapGesture {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                                                  to: nil,
+                                                  from: nil,
+                                                  for: nil)
+                }
+                .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { notification in
+                    if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+                        keyboardHeight = keyboardFrame.height
+                    }
+                }
+                .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                    keyboardHeight = 0
+                }
     }
 }
 
@@ -136,7 +153,7 @@ private extension SignInView {
             .cornerRadius(12)
         }
         .padding(.horizontal, 16)
-        .frame(maxHeight: 50)
+        .frame(height: 50)
     }
     
     @ViewBuilder
@@ -154,14 +171,21 @@ private extension SignInView {
     
     @ViewBuilder
     var headerSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: -16) {
             Text("Открой для себя")
                 .h1TextStyle()
                 .foregroundColor(Color("AccentLight"))
-            Text("книжный мир")
-                .font(.custom("AlumniSans-Bold", size: 96))
-                .textCase(.uppercase)
-                .foregroundColor(Color("Secondary"))
+            VStack(alignment: .leading, spacing: -40) {
+                Text("книжный")
+                    .font(.custom("AlumniSans-Bold", size: 96))
+                    .textCase(.uppercase)
+                    .foregroundColor(Color("Secondary"))
+                
+                Text("мир")
+                    .font(.custom("AlumniSans-Bold", size: 96))
+                    .textCase(.uppercase)
+                    .foregroundColor(Color("Secondary"))
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)

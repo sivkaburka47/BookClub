@@ -58,7 +58,6 @@ private extension SettingsSheetView {
                 Stepper(value: $fontSize, in: 6...30, step: 1) {
                     EmptyView()
                 }
-                .background()
                 .labelsHidden()
             }
         }
@@ -76,7 +75,6 @@ private extension SettingsSheetView {
                 Stepper(value: $paddingSize, in: 6...30, step: 1) {
                     EmptyView()
                 }
-                .background()
                 .labelsHidden()
             }
         }
