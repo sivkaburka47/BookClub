@@ -13,7 +13,6 @@ struct SideSheetView: View {
     @Binding var activeChapter: Int
     @Binding var isShowingSheet: Bool
     
-    
     var body: some View {
         NavigationStack {
             VStack {

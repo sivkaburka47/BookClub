@@ -139,12 +139,16 @@ struct ChapterView: View {
                         currentTime = newTime
                         print(currentTime)
                         updateCurrentIndices()
-                        if currentTime > parsedBookParagraphs.last!.lines.last!.time + 2 {
-                            isPlaying = false
-                            currentTime = 0.0
-                            currentParagraphIndex = -1
-                            currentLineIndex = -1
+                        if let lastParagraph = parsedBookParagraphs.last,
+                           let lastLine = lastParagraph.lines.last {
+                            if currentTime > lastLine.time + 2 {
+                                isPlaying = false
+                                currentTime = 0.0
+                                currentParagraphIndex = -1
+                                currentLineIndex = -1
+                            }
                         }
+
                     }
                 }
             }
@@ -176,7 +180,6 @@ struct ChapterView: View {
         }
     }
 }
-
 
 // MARK: View Components
 private extension ChapterView {
@@ -219,10 +222,10 @@ private extension ChapterView {
             if activeChapter > 0 {
                 activeChapter -= 1
             }
-        }) {
+        }, label: {
             CustomIcon(name: "Previous", size: 24, color: Color("White"))
                 .padding(8)
-        }
+        })
         .buttonStyle(PlainButtonStyle())
     }
     
@@ -230,10 +233,10 @@ private extension ChapterView {
     var contentsButton: some View {
         Button(action: {
             isShowingSheet.toggle()
-        }) {
+        }, label: {
             CustomIcon(name: "Contents", size: 24, color: Color("White"))
                 .padding(8)
-        }
+        })
         .buttonStyle(PlainButtonStyle())
     }
     
@@ -243,10 +246,10 @@ private extension ChapterView {
             if activeChapter < chapters.count - 1 {
                 activeChapter += 1
             }
-        }) {
+        }, label: {
             CustomIcon(name: "Next", size: 24, color: Color("White"))
                 .padding(8)
-        }
+        })
         .buttonStyle(PlainButtonStyle())
     }
     
@@ -254,30 +257,28 @@ private extension ChapterView {
     var settingsButton: some View {
         Button(action: {
             isShowingSettingSheet.toggle()
-        }) {
+        }, label: {
             CustomIcon(name: "Settings", size: 24, color: Color("White"))
                 .padding(8)
-        }
+        })
         .buttonStyle(PlainButtonStyle())
     }
-
     
     @ViewBuilder
     var playButton: some View {
         Button(action: {
             isPlaying.toggle()
-        }) {
+        }, label: {
             Circle()
                 .fill(Color("AccentLight"))
                 .frame(width: 50, height: 50)
                 .overlay(
                     CustomIcon(name: isPlaying ? "Pause" : "Play", size: 24, color: Color("AccentDark"))
                 )
-        }
+        })
     }
     
 }
-
 
 // MARK: Data and Parsing
 private extension ChapterView {
@@ -429,7 +430,6 @@ private extension ChapterView {
         
         return result
     }
-    
     
     private func updateCurrentIndices() {
         var maxTime: Double = -1.0

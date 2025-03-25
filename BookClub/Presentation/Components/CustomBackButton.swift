@@ -16,7 +16,9 @@ struct CustomBackButton: View {
     }
     
     var body: some View {
-        Button(action: { dismiss() }) {
+        Button(action: {
+            dismiss()
+        }, label: {
             HStack(spacing: 6) {
                 CustomIcon(name: "ArrowLeft", size: 24, color: textColor)
                 
@@ -24,7 +26,7 @@ struct CustomBackButton: View {
                     .font(.system(size: 17))
                     .foregroundColor(textColor)
             }
-        }
+        })
     }
     
     private var textColor: Color {

@@ -63,7 +63,6 @@ struct SearchView: View {
         }
     }
     
-    
 }
 
 // MARK: - Properties

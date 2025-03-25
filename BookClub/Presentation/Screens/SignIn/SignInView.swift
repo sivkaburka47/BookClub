@@ -79,7 +79,6 @@ private extension SignInView {
         .allowsHitTesting(false)
     }
     
-    
     @ViewBuilder
     func customSecureField(title: String, text: Binding<String>, isPasswordVisible: Binding<Bool>) -> some View {
         GeometryReader { geometry in
@@ -99,9 +98,15 @@ private extension SignInView {
                 .bodySmallTextStyle()
                 .frame(width: geometry.size.width * 0.5 + (!text.wrappedValue.isEmpty ? 0 : 24))
                 if !text.wrappedValue.isEmpty {
-                    Button(action: { isPasswordVisible.wrappedValue.toggle() }) {
-                        CustomIcon(name: isPasswordVisible.wrappedValue ? "EyeOff" : "EyeOn", size: 24, color: Color("AccentLight"))
-                    }
+                    Button(action: {
+                        isPasswordVisible.wrappedValue.toggle()
+                    }, label: {
+                        CustomIcon(
+                            name: isPasswordVisible.wrappedValue ? "EyeOff" : "EyeOn",
+                            size: 24,
+                            color: Color("AccentLight")
+                        )
+                    })
                 }
             }
             .frame(height: 24)
@@ -123,9 +128,9 @@ private extension SignInView {
                     .bodySmallTextStyle()
                     .frame(width: geometry.size.width * 0.5 + (!text.wrappedValue.isEmpty ? 0 : 24))
                 if let icon = icon, !text.wrappedValue.isEmpty {
-                    Button(action: { text.wrappedValue = "" }) {
+                    Button(action: { text.wrappedValue = "" }, label: {
                         CustomIcon(name: icon, size: 24, color: Color("AccentLight"))
-                    }
+                    })
                 }
             }
             .frame(height: 24)
@@ -139,13 +144,13 @@ private extension SignInView {
         HStack {
             Button(action: {
                 isSignedIn = true
-            }) {
+            }, label: {
                 Text("Войти")
                     .font(Font.custom("VelaSans-Bold", size: 16))
                     .foregroundColor(isFormValid ? Color("AccentDark") : Color("AccentLight"))
                     .bodyTextStyle()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            }
+            })
             .disabled(!isFormValid)
             .padding(.horizontal, 10)
             .padding(.vertical, 4)

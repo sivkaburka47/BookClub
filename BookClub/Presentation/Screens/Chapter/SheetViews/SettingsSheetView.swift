@@ -26,9 +26,9 @@ struct SettingsSheetView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         isShowingSettingSheet.toggle()
-                    }) {
+                    }, label: {
                         CustomIcon(name: "Close", size: 24, color: Color("AccentDark"))
-                    }
+                    })
                     .buttonStyle(PlainButtonStyle())
                 }
                 
@@ -47,10 +47,10 @@ struct SettingsSheetView: View {
 
 private extension SettingsSheetView {
     var fontSizeMenu: some View {
-        VStack(alignment:.leading, spacing: 0){
+        VStack(alignment: .leading, spacing: 0) {
             Text("Размер шрифта")
                 .bodyTextStyle()
-            HStack{
+            HStack {
                 Text("\(Int(fontSize)) пт")
                     .font(.custom("VelaSans-Bold", size: 16))
                     .bodyTextStyle()
@@ -64,10 +64,10 @@ private extension SettingsSheetView {
     }
     
     var paddingSizeMenu: some View {
-        VStack(alignment: .leading, spacing: 0){
+        VStack(alignment: .leading, spacing: 0) {
             Text("Расстония между строками")
                 .bodyTextStyle()
-            HStack{
+            HStack {
                 Text("\(Int(paddingSize)) пт")
                     .font(.custom("VelaSans-Bold", size: 16))
                     .bodyTextStyle()

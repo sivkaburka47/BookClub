@@ -70,9 +70,11 @@ private extension MovieDetailsView {
                 StyledButtonContent(text: "Читать", icon: "Play", style: .dark)
             }
             
-            Button(action: {}) {
+            Button(action: {
+                print("В избранное")
+            }, label: {
                 StyledButtonContent(text: "В избранное", icon: "Bookmarks", style: .light)
-            }
+            })
         }
         .padding(.horizontal, 16)
         .frame(height: 50)
@@ -126,7 +128,7 @@ private extension MovieDetailsView {
             ForEach(book.chapters.indices, id: \.self) { index in
                 chapterRow(chapter: book.chapters[index],
                             isActive: book.activeChapter == index,
-                            isRead: book.activeChapter != nil && index < book.activeChapter!)
+                            isRead: index < (book.activeChapter ?? 0))
             }
         }
     }

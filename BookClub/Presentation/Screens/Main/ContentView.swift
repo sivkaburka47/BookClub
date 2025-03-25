@@ -13,7 +13,7 @@ struct ContentView: View {
     
     var body: some View {
         if isSignedIn {
-            NavigationView{
+            NavigationView {
                 ZStack {
                     Group {
                         switch selectedTab {
@@ -40,7 +40,6 @@ struct ContentView: View {
         }
     }
 }
-
 
 #Preview {
     ContentView()

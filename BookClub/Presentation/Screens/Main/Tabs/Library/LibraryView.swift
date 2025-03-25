@@ -41,7 +41,7 @@ struct LibraryView: View {
                 .ignoresSafeArea()
             
             ScrollView {
-                VStack(alignment: .leading, spacing: 24){
+                VStack(alignment: .leading, spacing: 24) {
                     Text("Библиотека")
                         .h1TextStyle()
                         .foregroundColor(Color("Secondary"))
@@ -80,7 +80,7 @@ private extension LibraryView {
     var carouselCovers: some View {
         GeometryReader { geometry in
             ScrollView(.horizontal, showsIndicators: false) {
-                NavigationLink(destination: MovieDetailsView()){
+                NavigationLink(destination: MovieDetailsView()) {
                     HStack(spacing: 8) {
                         ForEach(0..<carouselCards.count, id: \.self) { index in
                             let card = carouselCards[index]
@@ -168,7 +168,6 @@ private extension LibraryView {
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
-
 
 #Preview {
     LibraryView()
