@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ChapterView: View {
+    @State private var isShowingSettingSheet = false
     @State private var isShowingSheet = false
     @State private var timer: DispatchSourceTimer?
     @Environment(\.dismiss) var dismiss
@@ -23,6 +24,8 @@ struct ChapterView: View {
     }
     
     @State private var activeChapter: Int = 1
+    @State private var fontSize: Double = 14
+    @State private var paddingSize: Double = 6
     
     var rawText: String {
         chapters[activeChapter].text
@@ -165,6 +168,12 @@ struct ChapterView: View {
                 .presentationBackground(Color("Background"))
                 .presentationCornerRadius(8)
         }
+        .sheet(isPresented: $isShowingSettingSheet) {
+            SettingsSheetView(isShowingSettingSheet: $isShowingSettingSheet, fontSize: $fontSize, paddingSize: $paddingSize)
+                .presentationDetents([.fraction(0.25)])
+                .presentationBackground(Color("Background"))
+                .presentationBackgroundInteraction(.enabled)
+        }
     }
 }
 
@@ -177,6 +186,7 @@ private extension ChapterView {
             Text(attributedString(for: paragraphIndex))
                 .foregroundColor(Color("Black"))
                 .id(paragraphIndex)
+                .lineSpacing(paddingSize)
         }
         Spacer()
             .frame(height: 64)
@@ -243,6 +253,7 @@ private extension ChapterView {
     @ViewBuilder
     var settingsButton: some View {
         Button(action: {
+            isShowingSettingSheet.toggle()
         }) {
             CustomIcon(name: "Settings", size: 24, color: Color("White"))
                 .padding(8)
@@ -397,9 +408,9 @@ private extension ChapterView {
                 
                 var attributedComponent = AttributedString(component)
                 if isItalic {
-                    attributedComponent.font = .custom("Georgia", size: 14).italic()
+                    attributedComponent.font = .custom("Georgia", size: fontSize).italic()
                 } else {
-                    attributedComponent.font = .custom("Georgia", size: 14)
+                    attributedComponent.font = .custom("Georgia", size: fontSize)
                 }
                 
                 lineContent += attributedComponent
