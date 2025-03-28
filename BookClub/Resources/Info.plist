@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>VelaSans-Bold.otf</string>
+		<string>VelaSans-ExtraBold.otf</string>
+		<string>VelaSans-ExtraLight.otf</string>
+		<string>VelaSans-Medium.otf</string>
+		<string>VelaSans-Regular.otf</string>
+		<string>VelaSans-SemiBold.otf</string>
+		<string>AlumniSans-Bold.ttf</string>
+		<string>georgiai.ttf</string>
+		<string>georgia.ttf</string>
+	</array>
+</dict>
+</plist>
