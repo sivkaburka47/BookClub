@@ -17,11 +17,11 @@ struct BookmarksView: View {
     )
     
     @State private var books = [
-        BookCard(image: "Image1", title: "Пикник на обочине", authors: ["Братья Стругацкие", "Альберт Эйнштейн"]),
-        BookCard(image: "Image2", title: "Код да Винчи", authors: ["Дэн Браун"]),
-        BookCard(image: "Image3", title: "Преступление и наказание", authors: ["Федор Достоевский", "Альберт Эйнштейн", "Дэн Браун"]),
-        BookCard(image: "Image4", title: "Мир как он есть", authors: ["Альберт Эйнштейн"]),
-        BookCard(image: "Image5", title: "Война и мир", authors: ["Лев Толстой"])
+        BookCard(image: "bookCover1", title: "Пикник на обочине", authors: ["Братья Стругацкие", "Альберт Эйнштейн"]),
+        BookCard(image: "bookCover2", title: "Код да Винчи", authors: ["Дэн Браун"]),
+        BookCard(image: "bookCover3", title: "Преступление и наказание", authors: ["Федор Достоевский", "Альберт Эйнштейн", "Дэн Браун"]),
+        BookCard(image: "bookCover4", title: "Мир как он есть", authors: ["Альберт Эйнштейн"]),
+        BookCard(image: "bookCover5", title: "Война и мир", authors: ["Лев Толстой"])
     ]
     
     @State private var quotes = [
