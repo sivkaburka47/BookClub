@@ -9,7 +9,7 @@ import SwiftUI
 struct SignInView: View {
     @State private var offset: CGFloat = 0
     @State private var keyboardHeight: CGFloat = 0
-    let bookCovers = Array(repeating: "book", count: 5)
+    let bookCovers = ["Image1", "Image2", "Image3", "Image4", "Image5", "Image6", "Image7", "Image8", "Image9",]
     
     @Binding var isSignedIn: Bool
     @State private var email: String = ""
@@ -60,7 +60,6 @@ private extension SignInView {
     var bookCarouselView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                let bookCovers = Array(repeating: "book", count: 5)
                 ForEach(0..<bookCovers.count * 10, id: \.self) { index in
                     Image(bookCovers[index % bookCovers.count])
                         .resizable()

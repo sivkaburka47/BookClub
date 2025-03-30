@@ -48,7 +48,7 @@ struct ChapterView: View {
                             Color.clear
                                 .preference(key: ViewOffsetKey.self, value: -$0.frame(in: .named("scroll")).origin.y)
                         })
-                        .onPreferenceChange(ViewOffsetKey.self) { newOffset in
+                        .onPreferenceChange(ViewOffsetKey.self) { [scrollProxy] newOffset in
                             offset = newOffset
                             if isPlaying {
                                 isUserScrolling = true

@@ -17,22 +17,22 @@ struct LibraryView: View {
     ]
     
     let carouselCards: [BookCard] = [
-        BookCard(image: "Cover_4", title: "Рассвет хайпа", authors: ["Эрик Мария Ремарк"], description: "Долгожданное продолжение Голодных игр"),
+        BookCard(image: "Image1", title: "Рассвет хайпа", authors: ["Эрик Мария Ремарк"], description: "Долгожданное продолжение Голодных игр"),
         BookCard(image: "bookCoverDetails", title: "Хайп окончен", authors: ["Эрик Мария Ремарк"], description: "НеДолгожданное продолжение Голодных игр"),
-        BookCard(image: "Cover_1", title: "Дедлайн близко", authors: ["Эрик Мария Ремарк"], description: "Долгожданное продолжение Голодных игр"),
-        BookCard(image: "Cover_2", title: "Крутая история", authors: ["Эрик Мария Ремарк"], description: "Долгожданное окончание Голодных игр")
+        BookCard(image: "Image8", title: "Дедлайн близко", authors: ["Эрик Мария Ремарк"], description: "Долгожданное продолжение Голодных игр"),
+        BookCard(image: "Image9", title: "Крутая история", authors: ["Эрик Мария Ремарк"], description: "Долгожданное окончание Голодных игр")
     ]
     
     let cards: [BookCard] = [
-        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
-        BookCard(image: "Cover_2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков", "Эрик Мария Ремарк"]),
-        BookCard(image: "Cover_3", title: "Преступление и наказание", authors: ["Фёдор Достоевский"]),
-        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
-        BookCard(image: "Cover_2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков"]),
-        BookCard(image: "Cover_3", title: "Преступление и наказание", authors: ["Фёдор Достоевский"]),
-        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
-        BookCard(image: "Cover_2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков"]),
-        BookCard(image: "Cover_3", title: "Преступление и наказание", authors: ["Фёдор Достоевский", "Эрик Мария Ремарк"])
+        BookCard(image: "Image1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
+        BookCard(image: "Image2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков", "Эрик Мария Ремарк"]),
+        BookCard(image: "Image3", title: "Преступление и наказание", authors: ["Фёдор Достоевский"]),
+        BookCard(image: "Image4", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
+        BookCard(image: "Image5", title: "Мастер и Маргарита", authors: ["Михаил Булгаков"]),
+        BookCard(image: "Image6", title: "Преступление и наказание", authors: ["Фёдор Достоевский"]),
+        BookCard(image: "Image7", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
+        BookCard(image: "Image8", title: "Мастер и Маргарита", authors: ["Михаил Булгаков"]),
+        BookCard(image: "Image9", title: "Преступление и наказание", authors: ["Фёдор Достоевский", "Эрик Мария Ремарк"])
     ]
     
     var body: some View {

@@ -19,24 +19,24 @@ struct SearchView: View {
     @State private var recentRequests = ["Android", "iOS", "Windows", "Linux", "MacOS"]
     
     @State private var authors = [
-        Author(image: "book", name: "Братья Стругацкие"),
-        Author(image: "book", name: "Дэн Браун"),
-        Author(image: "book", name: "Федор Достоевский"),
-        Author(image: "book", name: "Альберт Эйнштейн"),
-        Author(image: "book", name: "Лев Толстой")
+        Author(image: "authorAvatar1", name: "Братья Стругацкие"),
+        Author(image: "authorAvatar2", name: "Дэн Браун"),
+        Author(image: "authorAvatar3", name: "Федор Достоевский"),
+        Author(image: "authorAvatar1", name: "Альберт Эйнштейн"),
+        Author(image: "authorAvatar2", name: "Лев Толстой")
     ]
     
     @State private var books = [
-        BookCard(image: "book", title: "Программирование на SWIFT для IOS", authors: ["Братья Стругацкие"], genres: ["Фантастика", "Приключения"]),
-        BookCard(image: "book", title: "Код да Винчи", authors: ["Дэн Браун"], genres: ["Детектив", "Триллер"]),
-        BookCard(image: "book", title: "Преступление и наказание", authors: ["Федор Достоевский"], genres: ["Классика", "Детектив"]),
-        BookCard(image: "book", title: "Мир как он есть", authors: ["Альберт Эйнштейн"], genres: ["Биография", "Научпоп"]),
-        BookCard(image: "book", title: "Война и мир", authors: ["Лев Толстой"], genres: ["Классика", "Исторический роман"]),
-        BookCard(image: "book", title: "Гарри Поттер и философский камень", authors: ["Джоан Роулинг"], genres: ["Фэнтези", "Приключения"]),
-        BookCard(image: "book", title: "Шерлок Холмс", authors: ["Артур Конан Дойл"], genres: ["Детектив", "Классика"]),
-        BookCard(image: "book", title: "1984", authors: ["Джордж Оруэлл"], genres: ["Фантастика", "Антиутопия"]),
-        BookCard(image: "book", title: "Анна Каренина", authors: ["Лев Толстой"], genres: ["Классика", "Любовный роман"]),
-        BookCard(image: "book", title: "Дюна", authors: ["Фрэнк Герберт"], genres: ["Фантастика", "Приключения"])
+        BookCard(image: "Image1", title: "Программирование на SWIFT для IOS", authors: ["Братья Стругацкие"], genres: ["Фантастика", "Приключения"]),
+        BookCard(image: "Image2", title: "Код да Винчи", authors: ["Дэн Браун"], genres: ["Детектив", "Триллер"]),
+        BookCard(image: "Image3", title: "Преступление и наказание", authors: ["Федор Достоевский"], genres: ["Классика", "Детектив"]),
+        BookCard(image: "Image4", title: "Мир как он есть", authors: ["Альберт Эйнштейн"], genres: ["Биография", "Научпоп"]),
+        BookCard(image: "Image5", title: "Война и мир", authors: ["Лев Толстой"], genres: ["Классика", "Исторический роман"]),
+        BookCard(image: "Image6", title: "Гарри Поттер и философский камень", authors: ["Джоан Роулинг"], genres: ["Фэнтези", "Приключения"]),
+        BookCard(image: "Image7", title: "Шерлок Холмс", authors: ["Артур Конан Дойл"], genres: ["Детектив", "Классика"]),
+        BookCard(image: "Image8", title: "1984", authors: ["Джордж Оруэлл"], genres: ["Фантастика", "Антиутопия"]),
+        BookCard(image: "Image9", title: "Анна Каренина", authors: ["Лев Толстой"], genres: ["Классика", "Любовный роман"]),
+        BookCard(image: "Image1", title: "Дюна", authors: ["Фрэнк Герберт"], genres: ["Фантастика", "Приключения"])
     ]
 
     var body: some View {

@@ -65,7 +65,7 @@ private extension SettingsSheetView {
     
     var paddingSizeMenu: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Расстония между строками")
+            Text("Расстояние между строками")
                 .bodyTextStyle()
             HStack {
                 Text("\(Int(paddingSize)) пт")
