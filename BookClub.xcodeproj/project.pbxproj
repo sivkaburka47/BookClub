@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E62625B62E06BF09008FFC07 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = E62625B52E06BF09008FFC07 /* KeychainAccess */; };
 		E681FDB62E06AF0400ECD62B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = E681FDB52E06AF0400ECD62B /* Alamofire */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E62625B62E06BF09008FFC07 /* KeychainAccess in Frameworks */,
 				E681FDB62E06AF0400ECD62B /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,6 +87,7 @@
 			name = BookClub;
 			packageProductDependencies = (
 				E681FDB52E06AF0400ECD62B /* Alamofire */,
+				E62625B52E06BF09008FFC07 /* KeychainAccess */,
 			);
 			productName = BookClub;
 			productReference = E6D4EDFB2D84AB0B0034B524 /* BookClub.app */;
@@ -116,6 +119,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				E681FDB42E06AF0400ECD62B /* XCRemoteSwiftPackageReference "Alamofire" */,
+				E62625B42E06BF09008FFC07 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E6D4EDFC2D84AB0B0034B524 /* Products */;
@@ -381,6 +385,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E62625B42E06BF09008FFC07 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		E681FDB42E06AF0400ECD62B /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -392,6 +404,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E62625B52E06BF09008FFC07 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E62625B42E06BF09008FFC07 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
 		E681FDB52E06AF0400ECD62B /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E681FDB42E06AF0400ECD62B /* XCRemoteSwiftPackageReference "Alamofire" */;

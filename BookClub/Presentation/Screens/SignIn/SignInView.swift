@@ -7,6 +7,9 @@
 import SwiftUI
 
 struct SignInView: View {
+    @State private var isLoading = false
+    @State private var errorMessage: ErrorMessage?
+
     @State private var offset: CGFloat = 0
     @State private var keyboardHeight: CGFloat = 0
     let bookCovers = Array(repeating: "book", count: 5)
@@ -143,15 +146,22 @@ private extension SignInView {
     var signInButton: some View {
         HStack {
             Button(action: {
-                isSignedIn = true
+                Task {
+                    await handleSignIn()
+                }
             }, label: {
-                Text("Войти")
-                    .font(Font.custom("VelaSans-Bold", size: 16))
-                    .foregroundColor(isFormValid ? Color("AccentDark") : Color("AccentLight"))
-                    .bodyTextStyle()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                if isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                } else {
+                    Text("Войти")
+                        .font(Font.custom("VelaSans-Bold", size: 16))
+                        .foregroundColor(isFormValid ? Color("AccentDark") : Color("AccentLight"))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                }
             })
-            .disabled(!isFormValid)
+            .disabled(!isFormValid || isLoading)
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
             .background(isFormValid ? Color("White") : Color("AccentMedium"))
@@ -159,8 +169,16 @@ private extension SignInView {
         }
         .padding(.horizontal, 16)
         .frame(height: 50)
+        .alert(item: $errorMessage) { message in
+            Alert(
+                title: Text("Ошибка"),
+                message: Text(message.message),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+
     }
-    
+
     @ViewBuilder
     var formView: some View {
         VStack(spacing: 0) {
@@ -173,7 +191,7 @@ private extension SignInView {
         .background(RoundedRectangle(cornerRadius: 10).stroke(Color("AccentMedium"), lineWidth: 1))
         .padding(.horizontal, 16)
     }
-    
+
     @ViewBuilder
     var headerSection: some View {
         VStack(alignment: .leading, spacing: -16) {
@@ -194,6 +212,22 @@ private extension SignInView {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
+    }
+
+    func handleSignIn() async {
+        isLoading = true
+        defer { isLoading = false }
+
+        let gotService = GodService()
+
+        do {
+            try await gotService.login(email: email, password: password)
+            let books = try await gotService.fetchBooks()
+            print("Книги загружены: \(books.map { $0.title })")
+            isSignedIn = true
+        } catch {
+            errorMessage = ErrorMessage(message: error.localizedDescription)
+        }
     }
 }
 

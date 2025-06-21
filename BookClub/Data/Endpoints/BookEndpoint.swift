@@ -7,32 +7,33 @@
 
 import Foundation
 import Alamofire
+import KeychainAccess
 
 enum BookEndpoint: APIEndpoint {
-    case getBooks
-    case getBookById(id: UUID)
+    case getBooks(page: Int = 1, pageSize: Int = 1000)
+    case getBookById(bookId: Int)
     case findBooksByName(name: String)
     case getBooksByGenre(genre: String)
     case getBooksByAuthor(author: String)
     case getNewBooks
-    case getBookChapters(bookId: UUID)
+    case getBookChapters(bookId: Int)
 
     var path: String {
         switch self {
-        case .getBooks:
-            return "/Books"
-        case .getBookById(let id):
-            return "/Books/\(id.uuidString)"
-        case .findBooksByName:
-            return "/Books/Search"
-        case .getBooksByGenre:
-            return "/Books/Genre"
-        case .getBooksByAuthor:
-            return "/Books/Author"
+        case .getBooks(let page, let pageSize):
+            return "/books?pagination[page]=\(page)&pagination[pageSize]=\(pageSize)"
+        case .getBookById(let bookId):
+            return "/books?filters[id]=\(bookId)"
+        case .findBooksByName(let name):
+            return "/books?filters[title][$containsi]=\(name)"
+        case .getBooksByGenre(let genre):
+            return "/books?filters[genres][id][$eq]=\(genre)"
+        case .getBooksByAuthor(let author):
+            return "/books?filters[authors][id][$eq]=\(author)"
         case .getNewBooks:
-            return "/Books/New"
+            return "/books?filters[isNew]=true"
         case .getBookChapters(let bookId):
-            return "/Books/\(bookId.uuidString)/Chapters"
+            return "/chapters?filters[book][id][$eq]=\(bookId)"
         }
     }
 
@@ -41,17 +42,16 @@ enum BookEndpoint: APIEndpoint {
     }
 
     var parameters: Parameters? {
-        switch self {
-        case .findBooksByName(let name):
-            return ["name": name]
-        case .getBooksByGenre(let genre):
-            return ["genre": genre]
-        case .getBooksByAuthor(let author):
-            return ["author": author]
-        default:
-            return nil
-        }
+        return nil
     }
 
-    var headers: HTTPHeaders? { nil }
+    var headers: HTTPHeaders? {
+        guard let token = authToken else { return nil }
+        return ["Authorization": "Bearer \(token)"]
+    }
+
+    private var authToken: String? {
+        let keychain = Keychain()
+        return try? keychain.get("authToken")
+    }
 }
