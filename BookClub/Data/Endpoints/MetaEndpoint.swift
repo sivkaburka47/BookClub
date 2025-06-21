@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import KeychainAccess
 
 enum MetaEndpoint: APIEndpoint {
     case getAuthors
@@ -15,13 +16,22 @@ enum MetaEndpoint: APIEndpoint {
     var path: String {
         switch self {
         case .getAuthors:
-            return "/Authors"
+            return "/authors"
         case .getGenres:
-            return "/Genres"
+            return "/genres"
         }
     }
 
-    var method: HTTPMethod { .get }
-    var parameters: Parameters? { nil }
-    var headers: HTTPHeaders? { nil }
+    var method: Alamofire.HTTPMethod { .get }
+    var parameters: Alamofire.Parameters? { nil }
+
+    var headers: Alamofire.HTTPHeaders? {
+        guard let token = authToken else { return nil }
+        return ["Authorization": "Bearer \(token)"]
+    }
+
+    private var authToken: String? {
+        let keychain = Keychain()
+        return try? keychain.get("authToken")
+    }
 }
