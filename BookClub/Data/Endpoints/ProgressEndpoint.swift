@@ -7,24 +7,25 @@
 
 import Foundation
 import Alamofire
+import KeychainAccess
 
 enum ProgressEndpoint: APIEndpoint {
     case getProgress
-    case saveProgress(bookId: UUID, chapter: Int)
-    case updateProgress(bookId: UUID, chapter: Int)
+    case saveProgress
+    case updateProgress(documentId: String)
 
     var path: String {
         switch self {
         case .getProgress:
-            return "/Progress"
+            return "/progresses"
         case .saveProgress:
-            return "/Progress"
-        case .updateProgress:
-            return "/Progress"
+            return "/progresses"
+        case .updateProgress(let documentId):
+            return "/progresses/\(documentId)"
         }
     }
 
-    var method: HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         switch self {
         case .getProgress:
             return .get
@@ -35,18 +36,15 @@ enum ProgressEndpoint: APIEndpoint {
         }
     }
 
-    var parameters: Parameters? {
-        switch self {
-        case .saveProgress(let bookId, let chapter),
-             .updateProgress(let bookId, let chapter):
-            return [
-                "bookId": bookId.uuidString,
-                "chapter": chapter
-            ]
-        default:
-            return nil
-        }
+    var parameters: Alamofire.Parameters? { nil }
+
+    var headers: Alamofire.HTTPHeaders? {
+        guard let token = authToken else { return nil }
+        return ["Authorization": "Bearer \(token)"]
     }
 
-    var headers: HTTPHeaders? { nil }
+    private var authToken: String? {
+        let keychain = Keychain()
+        return try? keychain.get("authToken")
+    }
 }
