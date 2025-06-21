@@ -7,24 +7,25 @@
 
 import Foundation
 import Alamofire
+import KeychainAccess
 
 enum FavoritesEndpoint: APIEndpoint {
     case getFavorites
-    case addToFavorites(bookId: UUID)
-    case removeFromFavorites(bookId: UUID)
+    case addToFavorites(bookId: Int)
+    case removeFromFavorites(documentId: String)
 
     var path: String {
         switch self {
         case .getFavorites:
-            return "/Favorites"
+            return "/favorites"
         case .addToFavorites:
-            return "/Favorites"
-        case .removeFromFavorites(let bookId):
-            return "/Favorites/\(bookId.uuidString)"
+            return "/favorites"
+        case .removeFromFavorites(let documentId):
+            return "/favorites/\(documentId)"
         }
     }
 
-    var method: HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         switch self {
         case .getFavorites:
             return .get
@@ -35,14 +36,17 @@ enum FavoritesEndpoint: APIEndpoint {
         }
     }
 
-    var parameters: Parameters? {
-        switch self {
-        case .addToFavorites(let bookId):
-            return ["bookId": bookId.uuidString]
-        default:
-            return nil
-        }
+    var parameters: Alamofire.Parameters? {
+        return nil
     }
 
-    var headers: HTTPHeaders? { nil }
+    var headers: Alamofire.HTTPHeaders? {
+        guard let token = authToken else { return nil }
+        return ["Authorization": "Bearer \(token)"]
+    }
+
+    private var authToken: String? {
+        let keychain = Keychain()
+        return try? keychain.get("authToken")
+    }
 }
