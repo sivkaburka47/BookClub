@@ -37,15 +37,15 @@ enum BookEndpoint: APIEndpoint {
         }
     }
 
-    var method: HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         return .get
     }
 
-    var parameters: Parameters? {
+    var parameters: Alamofire.Parameters? {
         return nil
     }
 
-    var headers: HTTPHeaders? {
+    var headers: Alamofire.HTTPHeaders? {
         guard let token = authToken else { return nil }
         return ["Authorization": "Bearer \(token)"]
     }

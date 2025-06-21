@@ -21,9 +21,9 @@ enum AuthEndpoint: APIEndpoint {
         }
     }
 
-    var method: HTTPMethod { .post }
-    var parameters: Parameters? { nil }
-    var headers: HTTPHeaders? {
+    var method: Alamofire.HTTPMethod { .post }
+    var parameters: Alamofire.Parameters? { nil }
+    var headers: Alamofire.HTTPHeaders? {
         ["Content-Type": "application/json"]
     }
 }

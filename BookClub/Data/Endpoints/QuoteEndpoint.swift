@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import KeychainAccess
 
 enum QuoteEndpoint: APIEndpoint {
     case getQuotes
@@ -15,13 +16,13 @@ enum QuoteEndpoint: APIEndpoint {
     var path: String {
         switch self {
         case .getQuotes:
-            return "/Quotes"
+            return "/quotes"
         case .createQuote:
-            return "/Quotes"
+            return "/quotes"
         }
     }
 
-    var method: HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         switch self {
         case .getQuotes:
             return .get
@@ -30,14 +31,15 @@ enum QuoteEndpoint: APIEndpoint {
         }
     }
 
-    var parameters: Parameters? {
-        switch self {
-        case .createQuote(let text):
-            return ["text": text]
-        default:
-            return nil
-        }
+    var parameters: Alamofire.Parameters? { nil }
+
+    var headers: Alamofire.HTTPHeaders? {
+        guard let token = authToken else { return nil }
+        return ["Authorization": "Bearer \(token)"]
     }
 
-    var headers: HTTPHeaders? { nil }
+    private var authToken: String? {
+        let keychain = Keychain()
+        return try? keychain.get("authToken")
+    }
 }
