@@ -7,7 +7,14 @@
 
 import Foundation
 
-struct Author {
+struct Author: Identifiable {
+    let id: Int
     let image: String
     let name: String
+
+    init(id: Int = 0, image: String = "book", name: String = "Неизвестный автор") {
+        self.id = id
+        self.image = image
+        self.name = name
+    }
 }

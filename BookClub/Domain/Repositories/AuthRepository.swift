@@ -8,6 +8,6 @@
 import Foundation
 
 protocol AuthRepository {
-    func register(credentials: RegisterCredentials) async throws
-    func login(credentials: LoginCredentials) async throws
+    func register(credentials: Credentials) async throws
+    func login(credentials: Credentials) async throws
 }
