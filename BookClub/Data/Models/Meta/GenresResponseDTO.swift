@@ -20,3 +20,12 @@ struct GenreDTO: Codable, Identifiable {
     let updatedAt: String
     let publishedAt: String
 }
+
+extension GenreDTO {
+    func toDomain() -> Genre {
+        Genre(
+            id: id,
+            name: name
+        )
+    }
+}

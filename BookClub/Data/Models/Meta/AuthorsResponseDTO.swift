@@ -20,3 +20,13 @@ struct AuthorDTO: Codable, Identifiable {
     let updatedAt: String
     let publishedAt: String
 }
+
+extension AuthorDTO {
+    func toDomain() -> Author {
+        Author(
+            id: id,
+            image: "book",
+            name: name
+        )
+    }
+}

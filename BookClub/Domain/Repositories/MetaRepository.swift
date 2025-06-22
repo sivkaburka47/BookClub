@@ -9,5 +9,5 @@ import Foundation
 
 protocol MetaRepository {
     func getAuthors() async throws -> [Author]
-    func getGenres(bookId: Int) async throws -> [Genre]
+    func getGenres() async throws -> [Genre]
 }
