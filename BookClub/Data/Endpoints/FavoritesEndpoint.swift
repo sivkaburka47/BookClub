@@ -11,7 +11,7 @@ import KeychainAccess
 
 enum FavoritesEndpoint: APIEndpoint {
     case getFavorites
-    case addToFavorites(bookId: Int)
+    case addToFavorites
     case removeFromFavorites(documentId: String)
 
     var path: String {

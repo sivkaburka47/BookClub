@@ -24,9 +24,10 @@ extension FavoritesRepositoryImpl: FavoritesRepository {
     }
 
     func addToFavorites(bookId: Int) async throws {
-        let endpoint = FavoritesEndpoint.addToFavorites(bookId: bookId)
+        let endpoint = FavoritesEndpoint.addToFavorites
+        let request = AddToFavoritesRequestDTO(data: .init(bookId: bookId))
 
-        try await httpClient.sendRequestWithoutResponse(endpoint: endpoint, requestBody: nil as EmptyRequestModel?)
+        try await httpClient.sendRequestWithoutResponse(endpoint: endpoint, requestBody: request)
     }
 
     func removeFromFavorites(documentId: String) async throws {

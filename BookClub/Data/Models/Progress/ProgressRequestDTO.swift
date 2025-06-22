@@ -12,6 +12,6 @@ struct ProgressRequestDTO: Encodable {
 
     struct ProgressDataDTO: Encodable {
         let value: Int
-        let chaptedId: Int
+        let chapterId: Int
     }
 }

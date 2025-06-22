@@ -21,3 +21,14 @@ struct ProgressDTO: Codable, Identifiable {
     let publishedAt: String
     let chapterId: Int
 }
+
+extension ProgressDTO {
+    func toDomain() -> Progress {
+        Progress(
+            id: id,
+            documentId: documentId,
+            value: value,
+            chapterId: chapterId
+        )
+    }
+}
