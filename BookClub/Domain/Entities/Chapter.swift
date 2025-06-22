@@ -8,7 +8,19 @@
 import Foundation
 
 struct Chapter: Identifiable {
-    let id = UUID()
+    let id: Int
+    let documentId: String
     let title: String
     let text: String
+
+    init(id: Int = 0,
+         documentId: String = "",
+         title: String = "",
+         text: String = ""
+    ) {
+        self.id = id
+        self.documentId = documentId
+        self.title = title
+        self.text = text
+    }
 }

@@ -8,11 +8,11 @@
 import Foundation
 
 protocol BookRepository {
-    func getBooks(page: Int, pageSize: Int) async throws -> [Book]
-    func getBookById(bookId: Int) async throws -> [Book]
+    func getBooks(page: Int?, pageSize: Int?) async throws -> [Book]
+    func getBookById(bookId: Int) async throws -> Book
     func findBooksByName(name: String) async throws -> [Book]
-    func getBooksByGenre(genre: String) async throws -> [Book]
-    func getBooksByAuthor(author: String) async throws -> [Book]
+    func getBooksByGenre(genre: Int) async throws -> [Book]
+    func getBooksByAuthor(author: Int) async throws -> [Book]
     func getNewBooks() async throws -> [Book]
     func getBookChapters(bookId: Int) async throws -> [Chapter]
 }

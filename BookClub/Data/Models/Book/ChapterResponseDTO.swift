@@ -22,3 +22,14 @@ struct ChapterDTO: Codable, Identifiable {
     let updatedAt: String
     let publishedAt: String
 }
+
+extension ChapterDTO {
+    func toDomain() -> Chapter {
+        Chapter(
+            id: id,
+            documentId: documentId,
+            title: title,
+            text: text
+        )
+    }
+}

@@ -13,8 +13,8 @@ enum BookEndpoint: APIEndpoint {
     case getBooks(page: Int = 1, pageSize: Int = 1000)
     case getBookById(bookId: Int)
     case findBooksByName(name: String)
-    case getBooksByGenre(genre: String)
-    case getBooksByAuthor(author: String)
+    case getBooksByGenre(genre: Int)
+    case getBooksByAuthor(author: Int)
     case getNewBooks
     case getBookChapters(bookId: Int)
 

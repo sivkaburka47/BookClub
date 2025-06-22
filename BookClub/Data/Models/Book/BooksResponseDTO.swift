@@ -23,3 +23,22 @@ struct BookDTO: Codable {
     let isNew: Bool
     let illustrationURL: String?
 }
+
+
+extension BookDTO {
+    func toDomain() -> Book {
+        Book(
+            id: id,
+            documentId: documentId,
+            title: title,
+            coverImageUrl: URL(string: coverURL),
+            createdAt: ISO8601DateFormatter().date(from: createdAt) ?? Date(),
+            updatedAt: ISO8601DateFormatter().date(from: updatedAt) ?? Date(),
+            publishedAt: ISO8601DateFormatter().date(from: publishedAt) ?? Date(),
+            isNew: isNew,
+            authors: ["Авторы неизвестны"],
+            genres: ["Жанры неизвестны"],
+            description: nil
+        )
+    }
+}
