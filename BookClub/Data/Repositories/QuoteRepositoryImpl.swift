@@ -5,10 +5,26 @@
 //  Created by Станислав Дейнекин on 22.06.2025.
 //
 
-import Foundation
+final class QuoteRepositoryImpl {
+    private let httpClient: HTTPClient
 
-protocol QuoteRepositoryImpl {
-    func getQuotes() async throws -> ProgressReponseDTO
-    func createQuote() async throws -> GenresResponseDTO
-    func updateProgress(documentId: String) async throws
+    init(httpClient: HTTPClient) {
+        self.httpClient = httpClient
+    }
+}
+
+extension QuoteRepositoryImpl: QuoteRepository {
+    func getQuotes() async throws -> [Quote] {
+        let endpoint = QuoteEndpoint.getQuotes
+        let response: QuotesResponseDTO = try await httpClient.sendRequest(endpoint: endpoint, requestBody: nil as EmptyRequestModel?)
+
+        return response.data.map { $0.toDomain() }
+    }
+
+    func createQuote(quote: Quote) async throws {
+        let endpoint = QuoteEndpoint.createQuote
+        let request: AddToQuotesRequestDTO = AddToQuotesRequestDTO(data: .init(text: quote.text, bookId: quote.bookId))
+
+        try await httpClient.sendRequestWithoutResponse(endpoint: endpoint, requestBody: request)
+    }
 }
