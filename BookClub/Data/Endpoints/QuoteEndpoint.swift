@@ -11,7 +11,7 @@ import KeychainAccess
 
 enum QuoteEndpoint: APIEndpoint {
     case getQuotes
-    case createQuote(text: String)
+    case createQuote
 
     var path: String {
         switch self {
