@@ -13,14 +13,6 @@ struct BookmarksView: View {
     let getQuotesUseCase: GetQuotesUseCase = GetQuotesUseCaseImpl.create()
     let getProgressUseCase: GetProgressUseCase = GetProgressUseCaseImpl.create()
 
-    let book = BookDetails(
-        image: "book",
-        title: "Код Да Винчи",
-        author: "bebrik",
-        activeChapter: 0,
-        chapters: ["Пролог", "Глава 1", "Глава 2", "Глава 3"]
-    )
-
     @State private var readingStatus: ReadingStatus?
 
     @State private var books: [BookGridCard] = []
@@ -49,23 +41,19 @@ struct BookmarksView: View {
         }
         .task {
             do {
-                quotes = try await getQuotesUseCase.execute()
-            } catch {
-                print(error.localizedDescription)
-            }
+                async let quotesTask = getQuotesUseCase.execute()
+                async let booksTask = getFavoritesUseCase.execute()
+                async let readingStatusTask = getProgressUseCase.execute()
 
-            do {
-                books = try await getFavoritesUseCase.execute()
-            } catch {
-                print(error.localizedDescription)
-            }
+                quotes = try await quotesTask
+                books = try await booksTask
+                readingStatus = try await readingStatusTask
 
-            do {
-                readingStatus = try await getProgressUseCase.execute()
             } catch {
                 print(error.localizedDescription)
             }
         }
+
     }
 }
 
@@ -85,6 +73,8 @@ private extension BookmarksView {
                 NavigationLink(destination: MovieDetailsView()) {
                     HStack(spacing: 16) {
                         BookCover(image: readingStatus.bookImageUrl)
+                            .frame(width: 80, height: 126)
+                            .cornerRadius(4)
                         VStack(alignment: .leading, spacing: 16) {
                             bookInfo(for: readingStatus)
                             ProgressLine(progress: readingStatus.normalizedProgress)

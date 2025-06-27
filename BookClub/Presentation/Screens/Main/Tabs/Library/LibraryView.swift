@@ -35,21 +35,25 @@ struct LibraryView: View {
                         .h1TextStyle()
                         .foregroundColor(Color("Secondary"))
                     
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Новинки")
-                            .h2TextStyle()
-                        
-                        carouselCovers
+                    if !newBooks.isEmpty {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Новинки")
+                                .h2TextStyle()
+
+                            carouselCovers
+                        }
                     }
-                    
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Популярные книги")
-                            .h2TextStyle()
-                        
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(popularBooks) { card in
-                                NavigationLink(destination: MovieDetailsView()) {
-                                    cardView(cardImage: card.image, title: card.title, authors: card.authors)
+
+                    if !popularBooks.isEmpty {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Популярные книги")
+                                .h2TextStyle()
+
+                            LazyVGrid(columns: columns, spacing: 16) {
+                                ForEach(popularBooks) { card in
+                                    NavigationLink(destination: MovieDetailsView()) {
+                                        cardView(cardImage: card.image, title: card.title, authors: card.authors)
+                                    }
                                 }
                             }
                         }
@@ -63,13 +67,12 @@ struct LibraryView: View {
         .task {
             isLoading = true
             do {
-                newBooks = try await getNewBooksUseCase.execute()
-            } catch {
-                print(error.localizedDescription)
-            }
+                async let newBooksTask = getNewBooksUseCase.execute()
+                async let popularBooksTask = getBookCardsUseCase.execute()
 
-            do {
-                popularBooks = try await getBookCardsUseCase.execute()
+                newBooks = try await newBooksTask
+                popularBooks = try await popularBooksTask
+
             } catch {
                 print(error.localizedDescription)
             }
@@ -89,18 +92,11 @@ private extension LibraryView {
                             let card = newBooks[index]
 
                             ZStack(alignment: .bottomLeading) {
-                                AsyncImage(url: URL(string: card.image)) { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: geometry.size.width - 112, height: 256)
-                                        .clipped()
-                                        .cornerRadius(4)
-                                } placeholder: {
-                                    Color.gray
-                                        .frame(width: geometry.size.width - 112, height: 256)
-                                        .cornerRadius(4)
-                                }
+                                BookCover(image: card.image)
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: geometry.size.width - 112, height: 256)
+                                    .clipped()
+                                    .cornerRadius(4)
 
                                 imageText(description: card.description, title: card.title)
                                 .padding(.bottom, 16)
@@ -145,17 +141,10 @@ private extension LibraryView {
     
     @ViewBuilder
     func imageSection(imageName: String) -> some View {
-        AsyncImage(url: URL(string: imageName)) { image in
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .clipped()
-                .cornerRadius(4)
-        } placeholder: {
-            Color.gray
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .cornerRadius(4)
-        }
+        BookCover(image: imageName)
+            .aspectRatio(contentMode: .fit)
+            .clipped()
+            .cornerRadius(4)
     }
     
     @ViewBuilder
