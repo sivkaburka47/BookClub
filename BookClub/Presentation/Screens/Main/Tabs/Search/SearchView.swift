@@ -67,12 +67,19 @@ struct SearchView: View {
 
 // MARK: - Properties
 private extension SearchView {
-    var filteredBooks: [BookCard] {
+    var filteredBooks: [BookGridCard] {
         books.filter { book in
             let searchLowercased = searchText.lowercased()
             return book.title.lowercased().contains(searchLowercased) ||
                    book.authors.contains { $0.lowercased().contains(searchLowercased) } ||
                    book.genres.contains { $0.lowercased().contains(searchLowercased) }
+        }.map { bookCard in
+            BookGridCard(
+                id: Int(bookCard.id.uuidString.hash) ?? 0,
+                image: bookCard.image,
+                title: bookCard.title,
+                authors: bookCard.authors.map { Author(name: $0) }
+            )
         }
     }
 }

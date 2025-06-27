@@ -60,20 +60,18 @@ struct LibraryView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
-        .onAppear {
+        .task {
             isLoading = true
-            Task {
-                do {
-                    newBooks = try await getNewBooksUseCase.execute()
-                } catch {
-                    print(error.localizedDescription)
-                }
+            do {
+                newBooks = try await getNewBooksUseCase.execute()
+            } catch {
+                print(error.localizedDescription)
+            }
 
-                do {
-                    popularBooks = try await getBookCardsUseCase.execute()
-                } catch {
-                    print(error.localizedDescription)
-                }
+            do {
+                popularBooks = try await getBookCardsUseCase.execute()
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }

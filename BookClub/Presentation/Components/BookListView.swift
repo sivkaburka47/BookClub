@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BookListView: View {
-    let books: [BookCard]
+    let books: [BookGridCard]
     let spacing: CGFloat
 
     var body: some View {

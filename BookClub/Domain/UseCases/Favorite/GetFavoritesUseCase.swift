@@ -6,7 +6,7 @@
 //
 
 protocol GetFavoritesUseCase {
-    func execute() async throws -> [Book]
+    func execute() async throws -> [BookGridCard]
 }
 
 final class GetFavoritesUseCaseImpl: GetFavoritesUseCase {
@@ -28,33 +28,40 @@ final class GetFavoritesUseCaseImpl: GetFavoritesUseCase {
         return GetFavoritesUseCaseImpl(favoriteRepository: favoriteRepository, bookRepository: bookRepository)
     }
 
-    func execute() async throws -> [Book] {
-        let favoriteIds = try await getFavoriteIds()
+    func execute() async throws -> [BookGridCard] {
+        let favoriteIdsArray = try await getFavoriteIds()
+        let favoriteIds = Set(favoriteIdsArray)
+
+        if favoriteIds.isEmpty {
+            return []
+        }
 
         return try await withThrowingTaskGroup(of: Book?.self) { group in
             for bookId in favoriteIds {
                 group.addTask {
-                    try? await self.bookRepository.getBookById(bookId: bookId)
+                    do {
+                        let book = try await self.bookRepository.getBookById(bookId: bookId)
+                        return book
+                    } catch {
+                        return nil
+                    }
                 }
             }
 
             var books: [Book] = []
-
             for try await book in group {
                 if let book = book {
                     books.append(book)
                 }
             }
 
-            return books
+            let bookGridCards = books.map { $0.toBookGridCard() }
+            return bookGridCards
         }
     }
 
-    func getFavoriteIds() async throws -> [Int] {
-        do {
-            return try await favoriteRepository.getFavorites()
-        } catch {
-            throw error
-        }
+    private func getFavoriteIds() async throws -> [Int] {
+        let ids = try await favoriteRepository.getFavorites()
+        return ids
     }
 }

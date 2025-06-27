@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct BookmarksView: View {
+
+    let getFavoritesUseCase: GetFavoritesUseCase = GetFavoritesUseCaseImpl.create()
+    let getQuotesUseCase: GetQuotesUseCase = GetQuotesUseCaseImpl.create()
+
     let book = BookDetails(
         image: "book",
         title: "Код Да Винчи",
@@ -16,19 +20,10 @@ struct BookmarksView: View {
         chapters: ["Пролог", "Глава 1", "Глава 2", "Глава 3"]
     )
     
-    @State private var books = [
-        BookCard(image: "book", title: "Пикник на обочине", authors: ["Братья Стругацкие", "Альберт Эйнштейн"]),
-        BookCard(image: "book", title: "Код да Винчи", authors: ["Дэн Браун"]),
-        BookCard(image: "book", title: "Преступление и наказание", authors: ["Федор Достоевский", "Альберт Эйнштейн", "Дэн Браун"]),
-        BookCard(image: "book", title: "Мир как он есть", authors: ["Альберт Эйнштейн"]),
-        BookCard(image: "book", title: "Война и мир", authors: ["Лев Толстой"])
-    ]
-    
-    @State private var quotes = [
-        Quote(text: "Я все еще жив", bookTitle: "Код Да Винчи", author: "Дэн Браун"),
-        Quote(text: "Высокий, широкоплечий, с мертвенно-бледной кожей и редкими белыми волосами", bookTitle: "Код Да Винчи", author: "Дэн Браун")
-    ]
-    
+    @State private var books: [BookGridCard] = []
+
+    @State private var quotes: [Quote] = []
+
     var body: some View {
         ZStack {
             Color("Background")
@@ -47,6 +42,19 @@ struct BookmarksView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 16)
+            }
+        }
+        .task {
+            do {
+                quotes = try await getQuotesUseCase.execute()
+            } catch {
+                print(error.localizedDescription)
+            }
+
+            do {
+                books = try await getFavoritesUseCase.execute()
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }
@@ -112,7 +120,7 @@ private extension BookmarksView {
             Text(quote.text)
                 .quoteTextStyle()
             
-            Text("\(quote.bookTitle) • \(quote.author)")
+            Text("\(quote.bookTitle) • \(quote.authors.map(\.name).joined(separator: ", "))")
                 .footnoteTextStyle()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -133,8 +141,4 @@ private extension BookmarksView {
         }
     }
     
-}
-
-#Preview {
-    BookmarksView()
 }

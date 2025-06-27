@@ -23,7 +23,7 @@ enum BookEndpoint: APIEndpoint {
         case .getBooks(let page, let pageSize):
             return "/books?pagination[page]=\(page)&pagination[pageSize]=\(pageSize)&populate[0]=authors"
         case .getBookById(let bookId):
-            return "/books?filters[id]=\(bookId)"
+            return "/books?filters[id]=\(bookId)&populate[0]=authors"
         case .findBooksByName(let name):
             return "/books?filters[title][$containsi]=\(name)"
         case .getBooksByGenre(let genre):

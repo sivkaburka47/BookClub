@@ -10,21 +10,21 @@ import Foundation
 struct Quote: Identifiable {
     let id: Int
     let text: String
-    let bookTitle: String
-    let author: String
+    var bookTitle: String
+    var authors: [Author]
     let bookId: Int
 
     init(
         id: Int = 0,
         text: String = "",
-         bookTitle: String = "",
-         author: String = "Неизвестный автор",
-         bookId: Int = 0
+        bookTitle: String = "",
+        authors: [Author] = [],
+        bookId: Int = 0
     ) {
         self.id = id
         self.text = text
         self.bookTitle = bookTitle
-        self.author = author
+        self.authors = authors
         self.bookId = bookId
     }
 }
