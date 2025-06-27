@@ -49,7 +49,7 @@ extension BookRepositoryImpl: BookRepository {
 
     func findBooksByName(name: String) async throws -> [Book] {
         let endpoint = BookEndpoint.findBooksByName(name: name)
-        let response: BooksResponseDTO = try await httpClient.sendRequest(endpoint: endpoint, requestBody: nil as EmptyRequestModel?)
+        let response: BooksResponseWithoutAuthorsDTO = try await httpClient.sendRequest(endpoint: endpoint, requestBody: nil as EmptyRequestModel?)
 
         return response.data.map { $0.toDomain() }
     }

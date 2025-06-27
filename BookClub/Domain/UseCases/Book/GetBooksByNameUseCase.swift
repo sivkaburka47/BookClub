@@ -6,7 +6,7 @@
 //
 
 protocol GetBookByNameUseCase {
-    func execute(name: String) async throws -> [Book]
+    func execute(name: String) async throws -> [BookGridCard]
 }
 
 final class GetBookByNameUseCaseImpl: GetBookByNameUseCase {
@@ -22,9 +22,9 @@ final class GetBookByNameUseCaseImpl: GetBookByNameUseCase {
         return GetBookByNameUseCaseImpl(repository: repository)
     }
 
-    func execute(name: String) async throws -> [Book] {
+    func execute(name: String) async throws -> [BookGridCard] {
         do {
-            return try await repository.findBooksByName(name: name)
+            return try await repository.findBooksByName(name: name).map { $0.toBookGridCard() }
         } catch {
             throw error
         }

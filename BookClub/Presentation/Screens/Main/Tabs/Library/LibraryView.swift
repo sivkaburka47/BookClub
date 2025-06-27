@@ -62,21 +62,31 @@ struct LibraryView: View {
                 }
                 .padding(.horizontal, 16)
             }
+            .refreshable {
+                await loadBooks()
+            }
         }
         .toolbar(.hidden, for: .navigationBar)
         .task {
-            isLoading = true
-            do {
-                async let newBooksTask = getNewBooksUseCase.execute()
-                async let popularBooksTask = getBookCardsUseCase.execute()
-
-                newBooks = try await newBooksTask
-                popularBooks = try await popularBooksTask
-
-            } catch {
-                print(error.localizedDescription)
-            }
+            await loadBooks()
         }
+    }
+}
+
+private extension LibraryView {
+    private func loadBooks() async {
+        isLoading = true
+        do {
+            async let newBooksTask = getNewBooksUseCase.execute()
+            async let popularBooksTask = getBookCardsUseCase.execute()
+
+            newBooks = try await newBooksTask
+            popularBooks = try await popularBooksTask
+
+        } catch {
+            print(error.localizedDescription)
+        }
+        isLoading = false
     }
 }
 
@@ -92,7 +102,7 @@ private extension LibraryView {
                             let card = newBooks[index]
 
                             ZStack(alignment: .bottomLeading) {
-                                BookCover(image: card.image)
+                                ImageLoader(imageUrlString: card.image)
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: geometry.size.width - 112, height: 256)
                                     .clipped()
@@ -141,7 +151,7 @@ private extension LibraryView {
     
     @ViewBuilder
     func imageSection(imageName: String) -> some View {
-        BookCover(image: imageName)
+        ImageLoader(imageUrlString: imageName)
             .aspectRatio(contentMode: .fit)
             .clipped()
             .cornerRadius(4)

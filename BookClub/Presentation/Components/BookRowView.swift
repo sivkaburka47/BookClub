@@ -12,7 +12,7 @@ struct BookRowView: View {
 
     var body: some View {
         HStack(spacing: 16) {
-            BookCover(image: book.image)
+            ImageLoader(imageUrlString: book.image)
                 .frame(width: 80, height: 126)
                 .cornerRadius(4)
             VStack(alignment: .leading, spacing: 4) {

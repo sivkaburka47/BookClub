@@ -72,7 +72,7 @@ private extension BookmarksView {
 
                 NavigationLink(destination: MovieDetailsView()) {
                     HStack(spacing: 16) {
-                        BookCover(image: readingStatus.bookImageUrl)
+                        ImageLoader(imageUrlString: readingStatus.bookImageUrl)
                             .frame(width: 80, height: 126)
                             .cornerRadius(4)
                         VStack(alignment: .leading, spacing: 16) {

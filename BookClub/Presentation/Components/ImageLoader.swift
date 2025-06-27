@@ -1,5 +1,5 @@
 //
-//  BookCover.swift
+//  ImageLoader.swift
 //  BookClub
 //
 //  Created by Станислав Дейнекин on 17.03.2025.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct BookCover: View {
-    let image: String
+struct ImageLoader: View {
+    let imageUrlString: String
     @State private var isImageLoaded = false
 
     var body: some View {
@@ -18,7 +18,7 @@ struct BookCover: View {
                     .transition(.opacity)
             }
 
-            AsyncImage(url: URL(string: image)) { phase in
+            AsyncImage(url: URL(string: imageUrlString)) { phase in
                 switch phase {
                 case .success(let loadedImage):
                     loadedImage

@@ -8,36 +8,20 @@
 import SwiftUI
 
 struct SearchView: View {
+
+    let getGenresUseCase: GetGenresUseCase = GetGenresUseCaseImpl.create()
+    let getAuthorsUseCase: GetAuthorsUseCase = GetAuthorsUseCaseImpl.create()
+    let getBookByNameUseCase: GetBookByNameUseCase = GetBookByNameUseCaseImpl.create()
+
+    @State private var searchTask: Task<Void, Never>? = nil
+
+
     @State private var searchText: String = ""
-    
-    let genres = [
-        "Классика", "Фэнтези", "Фантастика", "Детектив",
-        "Триллер", "Исторический роман", "Любовный роман", "Приключения",
-        "Поэзия", "Биография", "Для подростков", "Для детей"
-    ]
-    
+    @State private var genres: [Genre] = []
     @State private var recentRequests = ["Android", "iOS", "Windows", "Linux", "MacOS"]
-    
-    @State private var authors = [
-        Author(image: "book", name: "Братья Стругацкие"),
-        Author(image: "book", name: "Дэн Браун"),
-        Author(image: "book", name: "Федор Достоевский"),
-        Author(image: "book", name: "Альберт Эйнштейн"),
-        Author(image: "book", name: "Лев Толстой")
-    ]
-    
-    @State private var books = [
-        BookCard(image: "book", title: "Программирование на SWIFT для IOS", authors: ["Братья Стругацкие"], genres: ["Фантастика", "Приключения"]),
-        BookCard(image: "book", title: "Код да Винчи", authors: ["Дэн Браун"], genres: ["Детектив", "Триллер"]),
-        BookCard(image: "book", title: "Преступление и наказание", authors: ["Федор Достоевский"], genres: ["Классика", "Детектив"]),
-        BookCard(image: "book", title: "Мир как он есть", authors: ["Альберт Эйнштейн"], genres: ["Биография", "Научпоп"]),
-        BookCard(image: "book", title: "Война и мир", authors: ["Лев Толстой"], genres: ["Классика", "Исторический роман"]),
-        BookCard(image: "book", title: "Гарри Поттер и философский камень", authors: ["Джоан Роулинг"], genres: ["Фэнтези", "Приключения"]),
-        BookCard(image: "book", title: "Шерлок Холмс", authors: ["Артур Конан Дойл"], genres: ["Детектив", "Классика"]),
-        BookCard(image: "book", title: "1984", authors: ["Джордж Оруэлл"], genres: ["Фантастика", "Антиутопия"]),
-        BookCard(image: "book", title: "Анна Каренина", authors: ["Лев Толстой"], genres: ["Классика", "Любовный роман"]),
-        BookCard(image: "book", title: "Дюна", authors: ["Фрэнк Герберт"], genres: ["Фантастика", "Приключения"])
-    ]
+    @State private var authors: [Author] = []
+
+    @State private var books: [BookGridCard] = []
 
     var body: some View {
         ZStack {
@@ -47,7 +31,7 @@ struct SearchView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     CustomSearchBar(text: $searchText)
-                    
+
                     if searchText.isEmpty {
                         recentRequestsSection
                         genresSection
@@ -55,14 +39,56 @@ struct SearchView: View {
                     } else {
                         booksSection
                     }
-                    
+
                     Spacer().frame(height: 100)
                 }
                 .padding(.horizontal, 16)
             }
+            .onChange(of: searchText) { newValue in
+                searchTask?.cancel()
+
+                guard !newValue.isEmpty else {
+                    books = []
+                    return
+                }
+
+                searchTask = Task {
+                    try? await Task.sleep(nanoseconds: 500_000_000)
+                    guard !Task.isCancelled else { return }
+                    await searchBooks()
+                }
+            }
+        }
+        .task {
+            await loadMeta()
         }
     }
     
+}
+
+private extension SearchView {
+    @MainActor
+    private func searchBooks() async {
+        do {
+            let result = try await getBookByNameUseCase.execute(name: searchText)
+            books = result
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+
+    private func loadMeta() async {
+        do {
+            async let genresTask = getGenresUseCase.execute()
+            async let authorsTask = getAuthorsUseCase.execute()
+
+            genres = try await genresTask
+            authors = try await authorsTask
+
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
 
 // MARK: - Properties
@@ -70,16 +96,7 @@ private extension SearchView {
     var filteredBooks: [BookGridCard] {
         books.filter { book in
             let searchLowercased = searchText.lowercased()
-            return book.title.lowercased().contains(searchLowercased) ||
-                   book.authors.contains { $0.lowercased().contains(searchLowercased) } ||
-                   book.genres.contains { $0.lowercased().contains(searchLowercased) }
-        }.map { bookCard in
-            BookGridCard(
-                id: Int(bookCard.id.uuidString.hash) ?? 0,
-                image: bookCard.image,
-                title: bookCard.title,
-                authors: bookCard.authors.map { Author(name: $0) }
-            )
+            return book.title.lowercased().contains(searchLowercased)
         }
     }
 }
@@ -94,7 +111,7 @@ private extension SearchView {
                     Text("Жанры")
                         .h2TextStyle()
                     GenresGridView(genres: genres) { selectedGenre in
-                        searchText = selectedGenre
+                        searchText = selectedGenre.name
                     }
                 }
             }
@@ -165,8 +182,7 @@ private extension SearchView {
     @ViewBuilder
     func authorRowView(for author: Author) -> some View {
         HStack(alignment: .center, spacing: 12) {
-            Image(author.image)
-                .resizable()
+            ImageLoader(imageUrlString: author.image)
                 .frame(width: 48, height: 48)
                 .clipShape(Circle())
             
@@ -184,8 +200,4 @@ private extension SearchView {
     var booksSection: some View {
         BookListView(books: filteredBooks, spacing: 16)
     }
-}
-
-#Preview {
-    SearchView()
 }
