@@ -6,7 +6,7 @@
 //
 
 protocol GetNewBooksUseCase {
-    func execute() async throws -> [Book]
+    func execute() async throws -> [FeaturedBookCard]
 }
 
 final class GetNewBooksUseCaseImpl: GetNewBooksUseCase {
@@ -22,9 +22,9 @@ final class GetNewBooksUseCaseImpl: GetNewBooksUseCase {
         return GetNewBooksUseCaseImpl(repository: repository)
     }
 
-    func execute() async throws -> [Book] {
+    func execute() async throws -> [FeaturedBookCard] {
         do {
-            return try await repository.getNewBooks()
+            return try await repository.getNewBooks().map { $0.toFeaturedBookCard() }
         } catch {
             throw error
         }

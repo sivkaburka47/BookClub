@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct LibraryView: View {
+
+    let getBookCardsUseCase: GetBookCardsUseCase = GetBookCardsUseCaseImpl.create()
+    let getNewBooksUseCase: GetNewBooksUseCase = GetNewBooksUseCaseImpl.create()
+
     @State private var scrollPosition: Int?
     
     var columns: [GridItem] = [
@@ -15,26 +19,11 @@ struct LibraryView: View {
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible())
     ]
-    
-    let carouselCards: [BookCard] = [
-        BookCard(image: "Cover_4", title: "Рассвет хайпа", authors: ["Эрик Мария Ремарк"], description: "Долгожданное продолжение Голодных игр"),
-        BookCard(image: "bookCoverDetails", title: "Хайп окончен", authors: ["Эрик Мария Ремарк"], description: "НеДолгожданное продолжение Голодных игр"),
-        BookCard(image: "Cover_1", title: "Дедлайн близко", authors: ["Эрик Мария Ремарк"], description: "Долгожданное продолжение Голодных игр"),
-        BookCard(image: "Cover_2", title: "Крутая история", authors: ["Эрик Мария Ремарк"], description: "Долгожданное окончание Голодных игр")
-    ]
-    
-    let cards: [BookCard] = [
-        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
-        BookCard(image: "Cover_2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков", "Эрик Мария Ремарк"]),
-        BookCard(image: "Cover_3", title: "Преступление и наказание", authors: ["Фёдор Достоевский"]),
-        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
-        BookCard(image: "Cover_2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков"]),
-        BookCard(image: "Cover_3", title: "Преступление и наказание", authors: ["Фёдор Достоевский"]),
-        BookCard(image: "Cover_1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
-        BookCard(image: "Cover_2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков"]),
-        BookCard(image: "Cover_3", title: "Преступление и наказание", authors: ["Фёдор Достоевский", "Эрик Мария Ремарк"])
-    ]
-    
+
+    @State private var newBooks: [FeaturedBookCard] = []
+    @State private var popularBooks: [BookGridCard] = []
+    @State private var isLoading: Bool = false
+
     var body: some View {
         ZStack {
             Color("Background")
@@ -58,7 +47,7 @@ struct LibraryView: View {
                             .h2TextStyle()
                         
                         LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(cards) { card in
+                            ForEach(popularBooks) { card in
                                 NavigationLink(destination: MovieDetailsView()) {
                                     cardView(cardImage: card.image, title: card.title, authors: card.authors)
                                 }
@@ -71,6 +60,22 @@ struct LibraryView: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
+        .onAppear {
+            isLoading = true
+            Task {
+                do {
+                    newBooks = try await getNewBooksUseCase.execute()
+                } catch {
+                    print(error.localizedDescription)
+                }
+
+                do {
+                    popularBooks = try await getBookCardsUseCase.execute()
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
 }
 
@@ -82,17 +87,23 @@ private extension LibraryView {
             ScrollView(.horizontal, showsIndicators: false) {
                 NavigationLink(destination: MovieDetailsView()) {
                     HStack(spacing: 8) {
-                        ForEach(0..<carouselCards.count, id: \.self) { index in
-                            let card = carouselCards[index]
-                            
+                        ForEach(0..<newBooks.count, id: \.self) { index in
+                            let card = newBooks[index]
+
                             ZStack(alignment: .bottomLeading) {
-                                Image(card.image)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: geometry.size.width - 112, height: 256)
-                                    .clipped()
-                                    .cornerRadius(4)
-                                
+                                AsyncImage(url: URL(string: card.image)) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: geometry.size.width - 112, height: 256)
+                                        .clipped()
+                                        .cornerRadius(4)
+                                } placeholder: {
+                                    Color.gray
+                                        .frame(width: geometry.size.width - 112, height: 256)
+                                        .cornerRadius(4)
+                                }
+
                                 imageText(description: card.description, title: card.title)
                                 .padding(.bottom, 16)
                             }
@@ -126,7 +137,7 @@ private extension LibraryView {
     }
     
     @ViewBuilder
-    func cardView(cardImage: String, title: String, authors: [String]) -> some View {
+    func cardView(cardImage: String, title: String, authors: [Author]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             imageSection(imageName: cardImage)
             textContentSection(title: title, authors: authors)
@@ -136,15 +147,21 @@ private extension LibraryView {
     
     @ViewBuilder
     func imageSection(imageName: String) -> some View {
-        Image(imageName)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .clipped()
-            .cornerRadius(4)
+        AsyncImage(url: URL(string: imageName)) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .clipped()
+                .cornerRadius(4)
+        } placeholder: {
+            Color.gray
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .cornerRadius(4)
+        }
     }
     
     @ViewBuilder
-    func textContentSection(title: String, authors: [String]) -> some View {
+    func textContentSection(title: String, authors: [Author]) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             titleLabel(text: title)
             authorsLabel(authors: authors)
@@ -162,11 +179,12 @@ private extension LibraryView {
     }
     
     @ViewBuilder
-    func authorsLabel(authors: [String]) -> some View {
-        Text(authors.joined(separator: ", "))
+    func authorsLabel(authors: [Author]) -> some View {
+        Text(authors.map { $0.name }.joined(separator: ", "))
             .footnoteTextStyle()
             .frame(maxWidth: .infinity, alignment: .leading)
     }
+
 }
 
 #Preview {

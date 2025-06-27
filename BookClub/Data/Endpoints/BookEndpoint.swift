@@ -21,7 +21,7 @@ enum BookEndpoint: APIEndpoint {
     var path: String {
         switch self {
         case .getBooks(let page, let pageSize):
-            return "/books?pagination[page]=\(page)&pagination[pageSize]=\(pageSize)"
+            return "/books?pagination[page]=\(page)&pagination[pageSize]=\(pageSize)&populate[0]=authors"
         case .getBookById(let bookId):
             return "/books?filters[id]=\(bookId)"
         case .findBooksByName(let name):
@@ -31,7 +31,7 @@ enum BookEndpoint: APIEndpoint {
         case .getBooksByAuthor(let author):
             return "/books?filters[authors][id][$eq]=\(author)"
         case .getNewBooks:
-            return "/books?filters[isNew]=true"
+            return "/books?filters[isNew]=true&populate[0]=authors"
         case .getBookChapters(let bookId):
             return "/chapters?filters[book][id][$eq]=\(bookId)"
         }
