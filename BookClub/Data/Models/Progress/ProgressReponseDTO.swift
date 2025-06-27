@@ -26,6 +26,7 @@ extension ProgressDTO {
     func toDomain() -> Progress {
         Progress(
             id: id,
+            updatedAt: ISO8601DateFormatter().date(from: updatedAt) ?? Date(),
             documentId: documentId,
             value: value,
             chapterId: chapterId

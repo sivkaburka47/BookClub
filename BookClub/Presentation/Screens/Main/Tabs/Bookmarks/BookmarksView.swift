@@ -11,6 +11,7 @@ struct BookmarksView: View {
 
     let getFavoritesUseCase: GetFavoritesUseCase = GetFavoritesUseCaseImpl.create()
     let getQuotesUseCase: GetQuotesUseCase = GetQuotesUseCaseImpl.create()
+    let getProgressUseCase: GetProgressUseCase = GetProgressUseCaseImpl.create()
 
     let book = BookDetails(
         image: "book",
@@ -19,7 +20,9 @@ struct BookmarksView: View {
         activeChapter: 0,
         chapters: ["Пролог", "Глава 1", "Глава 2", "Глава 3"]
     )
-    
+
+    @State private var readingStatus: ReadingStatus?
+
     @State private var books: [BookGridCard] = []
 
     @State private var quotes: [Quote] = []
@@ -56,6 +59,12 @@ struct BookmarksView: View {
             } catch {
                 print(error.localizedDescription)
             }
+
+            do {
+                readingStatus = try await getProgressUseCase.execute()
+            } catch {
+                print(error.localizedDescription)
+            }
         }
     }
 }
@@ -64,20 +73,22 @@ struct BookmarksView: View {
 private extension BookmarksView {
     @ViewBuilder
     var currentReadingSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text("Читаете сейчас")
-                    .h2TextStyle()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                PlayButton()
-            }
-            
-            NavigationLink(destination: MovieDetailsView()) {
-                HStack(spacing: 16) {
-                    BookCover(image: book.image)
-                    VStack(alignment: .leading, spacing: 16) {
-                        bookInfo(for: book)
-                        ProgressLine(progress: book.progress)
+        if let readingStatus {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Читаете сейчас")
+                        .h2TextStyle()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    PlayButton()
+                }
+
+                NavigationLink(destination: MovieDetailsView()) {
+                    HStack(spacing: 16) {
+                        BookCover(image: readingStatus.bookImageUrl)
+                        VStack(alignment: .leading, spacing: 16) {
+                            bookInfo(for: readingStatus)
+                            ProgressLine(progress: readingStatus.normalizedProgress)
+                        }
                     }
                 }
             }
@@ -131,11 +142,11 @@ private extension BookmarksView {
     }
     
     @ViewBuilder
-    func bookInfo(for book: BookDetails) -> some View {
+    func bookInfo(for book: ReadingStatus) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(book.title)
+            Text(book.bookTitle)
                 .h2TextStyle()
-            Text(book.currentChapter)
+            Text(book.chapterTitle)
                 .font(Font.custom("VelaSans-Bold", size: 14))
                 .bodySmallTextStyle()
         }

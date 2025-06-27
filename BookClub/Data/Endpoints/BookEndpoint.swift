@@ -17,6 +17,7 @@ enum BookEndpoint: APIEndpoint {
     case getBooksByAuthor(author: Int)
     case getNewBooks
     case getBookChapters(bookId: Int)
+    case getChapterWithBook(chapterId: Int)
 
     var path: String {
         switch self {
@@ -34,6 +35,8 @@ enum BookEndpoint: APIEndpoint {
             return "/books?filters[isNew]=true&populate[0]=authors"
         case .getBookChapters(let bookId):
             return "/chapters?filters[book][id][$eq]=\(bookId)"
+        case .getChapterWithBook(let chapterId):
+            return "/chapters?filters[id][$eq]=\(chapterId)&populate[0]=book"
         }
     }
 

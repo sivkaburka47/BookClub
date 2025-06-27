@@ -33,3 +33,31 @@ extension ChapterDTO {
         )
     }
 }
+
+struct ChapterWithBookResponseDTO: Codable {
+    let data: [ChapterWithBookDTO]
+    let meta: MetaDTO
+}
+
+struct ChapterWithBookDTO: Codable {
+    let id: Int
+    let documentId: String
+    let text: String
+    let title: String
+    let order: Int
+    let createdAt: String
+    let updatedAt: String
+    let publishedAt: String
+    let book: BookWithoutAuthorsDTO
+
+    func toReadingStatus() -> ReadingStatus {
+        ReadingStatus(
+            id: id,
+            bookId: book.id,
+            bookTitle: book.title,
+            bookImageUrl: book.coverURL,
+            chapterTitle: title,
+            value: 0
+        )
+    }
+}

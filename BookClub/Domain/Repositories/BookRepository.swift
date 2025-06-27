@@ -15,4 +15,5 @@ protocol BookRepository {
     func getBooksByAuthor(author: Int) async throws -> [Book]
     func getNewBooks() async throws -> [Book]
     func getBookChapters(bookId: Int) async throws -> [Chapter]
+    func getChapterWithBook(chapterId: Int) async throws -> ReadingStatus?
 }

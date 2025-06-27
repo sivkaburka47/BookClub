@@ -79,4 +79,10 @@ extension BookRepositoryImpl: BookRepository {
         let response: ChapterResponseDTO = try await httpClient.sendRequest(endpoint: endpoint, requestBody: nil as EmptyRequestModel?)
         return response.data.map { $0.toDomain() }
     }
+
+    func getChapterWithBook(chapterId: Int) async throws -> ReadingStatus? {
+        let endpoint = BookEndpoint.getChapterWithBook(chapterId: chapterId)
+        let response: ChapterWithBookResponseDTO = try await httpClient.sendRequest(endpoint: endpoint, requestBody: nil as EmptyRequestModel?)
+        return response.data.first?.toReadingStatus()
+    }
 }
