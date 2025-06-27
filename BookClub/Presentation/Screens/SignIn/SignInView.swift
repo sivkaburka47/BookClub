@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct SignInView: View {
+    let loginUseCase: LoginUseCase = LoginUseCaseImpl.create()
+
     @State private var isLoading = false
     @State private var errorMessage: ErrorMessage?
 
@@ -213,24 +215,19 @@ private extension SignInView {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
     }
+}
 
+private extension SignInView {
     func handleSignIn() async {
         isLoading = true
         defer { isLoading = false }
 
-        let gotService = GodService()
-
         do {
-            try await gotService.login(email: email, password: password)
-            let books = try await gotService.fetchBooks()
-            print("Книги загружены: \(books.map { $0.title })")
+            let credentials = Credentials(email: email, password: password)
+            try await loginUseCase.execute(request: credentials)
             isSignedIn = true
         } catch {
             errorMessage = ErrorMessage(message: error.localizedDescription)
         }
     }
-}
-
-#Preview {
-    SignInView(isSignedIn: .constant(false))
 }
