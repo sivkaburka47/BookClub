@@ -15,13 +15,14 @@ struct SearchView: View {
     let getBooksByAuthorUseCase: GetBooksByAuthorUseCase = GetBooksByAuthorUseCaseImpl.create()
     let getBooksByGenreUseCase: GetBooksByGenreUseCase = GetBooksByGenreUseCaseImpl.create()
 
+    @AppStorage("recentSearches") private var recentSearchesData: String = "[]"
+    @State private var recentSearches: [String] = []
     @State private var searchTask: Task<Void, Never>? = nil
     @State private var matchedGenreIds: [Int] = []
     @State private var matchedAuthorIds: [Int] = []
 
     @State private var searchText: String = ""
     @State private var genres: [Genre] = []
-    @State private var recentRequests = ["Android", "iOS", "Windows", "Linux", "MacOS"]
     @State private var authors: [Author] = []
 
     @State private var books: [BookGridCard] = []
@@ -76,6 +77,9 @@ struct SearchView: View {
 
             }
         }
+        .onAppear {
+            loadRecentSearches()
+        }
         .task {
             await loadMeta()
         }
@@ -84,6 +88,44 @@ struct SearchView: View {
 }
 
 private extension SearchView {
+
+    private func saveSearchQuery(_ query: String) {
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        var current = recentSearches
+        current.removeAll { $0.caseInsensitiveCompare(trimmed) == .orderedSame }
+        current.insert(trimmed, at: 0)
+
+        if current.count > 6 {
+            current = Array(current.prefix(6))
+        }
+
+        recentSearches = current
+        persistSearches(current)
+    }
+
+    private func removeSearchQuery(_ query: String) {
+        var updated = recentSearches
+        updated.removeAll { $0.caseInsensitiveCompare(query) == .orderedSame }
+        recentSearches = updated
+        persistSearches(updated)
+    }
+
+    private func loadRecentSearches() {
+        if let data = recentSearchesData.data(using: .utf8),
+           let decoded = try? JSONDecoder().decode([String].self, from: data) {
+            recentSearches = decoded
+        }
+    }
+
+    private func persistSearches(_ searches: [String]) {
+        if let data = try? JSONEncoder().encode(searches),
+           let json = String(data: data, encoding: .utf8) {
+            recentSearchesData = json
+        }
+    }
+
     @MainActor
     private func searchBooks() async {
         do {
@@ -96,6 +138,9 @@ private extension SearchView {
             let uniqueBooks = Array(Dictionary(grouping: combinedBooks, by: { $0.id }).values.compactMap { $0.first })
 
             books = uniqueBooks
+            if !books.isEmpty {
+                saveSearchQuery(searchText)
+            }
         } catch {
             print("Ошибка при поиске книг: \(error.localizedDescription)")
         }
@@ -163,12 +208,12 @@ private extension SearchView {
     @ViewBuilder
     var recentRequestsSection: some View {
         Group {
-            if !recentRequests.isEmpty {
+            if !recentSearches.isEmpty {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Недавние запросы")
                         .h2TextStyle()
                     VStack(alignment: .leading, spacing: 8) {
-                        ForEach(recentRequests, id: \.self) { request in
+                        ForEach(recentSearches, id: \.self) { request in
                             recentRequestRow(for: request)
                         }
                     }
@@ -187,7 +232,7 @@ private extension SearchView {
             CustomIcon(name: "Close", size: 24, color: Color("AccentDark"))
                 .padding(8)
                 .onTapGesture {
-                    recentRequests.removeAll { $0 == request }
+                    removeSearchQuery(request)
                 }
         }
         .padding(.leading, 16)
