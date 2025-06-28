@@ -12,6 +12,7 @@ struct FeaturedBookCard: Identifiable {
     let image: String
     let title: String
     let description: String
+    var previousOffset: CGFloat = 0
 
     init(id: Int = 0, image: String = "", title: String = "", description: String = "") {
         self.id = id

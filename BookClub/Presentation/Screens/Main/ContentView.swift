@@ -32,6 +32,7 @@ struct ContentView: View {
                             selectedTab = .library
                         }
                     }
+                    .ignoresSafeArea(.keyboard) 
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
             }
@@ -39,8 +40,4 @@ struct ContentView: View {
             SignInView(isSignedIn: $isSignedIn)
         }
     }
-}
-
-#Preview {
-    ContentView()
 }

@@ -15,7 +15,6 @@ struct SearchView: View {
 
     @State private var searchTask: Task<Void, Never>? = nil
 
-
     @State private var searchText: String = ""
     @State private var genres: [Genre] = []
     @State private var recentRequests = ["Android", "iOS", "Windows", "Linux", "MacOS"]

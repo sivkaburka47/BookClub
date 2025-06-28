@@ -40,7 +40,7 @@ struct LibraryView: View {
                             Text("Новинки")
                                 .h2TextStyle()
 
-                            carouselCovers
+                            CardCarouselView(cards: newBooks)
                         }
                     }
 
