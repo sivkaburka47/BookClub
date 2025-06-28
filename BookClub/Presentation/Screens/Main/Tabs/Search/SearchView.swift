@@ -12,8 +12,12 @@ struct SearchView: View {
     let getGenresUseCase: GetGenresUseCase = GetGenresUseCaseImpl.create()
     let getAuthorsUseCase: GetAuthorsUseCase = GetAuthorsUseCaseImpl.create()
     let getBookByNameUseCase: GetBookByNameUseCase = GetBookByNameUseCaseImpl.create()
+    let getBooksByAuthorUseCase: GetBooksByAuthorUseCase = GetBooksByAuthorUseCaseImpl.create()
+    let getBooksByGenreUseCase: GetBooksByGenreUseCase = GetBooksByGenreUseCaseImpl.create()
 
     @State private var searchTask: Task<Void, Never>? = nil
+    @State private var matchedGenreIds: [Int] = []
+    @State private var matchedAuthorIds: [Int] = []
 
     @State private var searchText: String = ""
     @State private var genres: [Genre] = []
@@ -48,14 +52,28 @@ struct SearchView: View {
 
                 guard !newValue.isEmpty else {
                     books = []
+                    matchedGenreIds = []
+                    matchedAuthorIds = []
                     return
                 }
 
                 searchTask = Task {
                     try? await Task.sleep(nanoseconds: 500_000_000)
                     guard !Task.isCancelled else { return }
+
+                    let matchedGenres = genres.filter {
+                        $0.name.lowercased().contains(newValue.lowercased())
+                    }
+                    matchedGenreIds = matchedGenres.map { $0.id }
+
+                    let matchedAuthors = authors.filter {
+                        $0.name.lowercased().contains(newValue.lowercased())
+                    }
+                    matchedAuthorIds = matchedAuthors.map { $0.id }
+
                     await searchBooks()
                 }
+
             }
         }
         .task {
@@ -69,11 +87,36 @@ private extension SearchView {
     @MainActor
     private func searchBooks() async {
         do {
-            let result = try await getBookByNameUseCase.execute(name: searchText)
-            books = result
+            async let booksByName = getBookByNameUseCase.execute(name: searchText)
+            async let booksByGenres = fetchBooksByGenres(ids: matchedGenreIds)
+            async let booksByAuthors = fetchBooksByAuthors(ids: matchedAuthorIds)
+
+            let (byName, byGenres, byAuthors) = try await (booksByName, booksByGenres, booksByAuthors)
+            let combinedBooks = (byName + byGenres + byAuthors)
+            let uniqueBooks = Array(Dictionary(grouping: combinedBooks, by: { $0.id }).values.compactMap { $0.first })
+
+            books = uniqueBooks
         } catch {
-            print(error.localizedDescription)
+            print("Ошибка при поиске книг: \(error.localizedDescription)")
         }
+    }
+
+    private func fetchBooksByGenres(ids: [Int]) async throws -> [BookGridCard] {
+        var allBooks: [BookGridCard] = []
+        for id in ids {
+            let books = try await getBooksByGenreUseCase.execute(genre: id)
+            allBooks.append(contentsOf: books)
+        }
+        return allBooks
+    }
+
+    private func fetchBooksByAuthors(ids: [Int]) async throws -> [BookGridCard] {
+        var allBooks: [BookGridCard] = []
+        for id in ids {
+            let books = try await getBooksByAuthorUseCase.execute(author: id)
+            allBooks.append(contentsOf: books)
+        }
+        return allBooks
     }
 
     private func loadMeta() async {
@@ -197,6 +240,6 @@ private extension SearchView {
     
     @ViewBuilder
     var booksSection: some View {
-        BookListView(books: filteredBooks, spacing: 16)
+        BookListView(books: books, spacing: 16)
     }
 }

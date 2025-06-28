@@ -6,7 +6,7 @@
 //
 
 protocol GetBooksByGenreUseCase {
-    func execute(genre: Int) async throws -> [Book]
+    func execute(genre: Int) async throws -> [BookGridCard]
 }
 
 final class GetBooksByGenreUseCaseImpl: GetBooksByGenreUseCase {
@@ -22,9 +22,9 @@ final class GetBooksByGenreUseCaseImpl: GetBooksByGenreUseCase {
         return GetBooksByGenreUseCaseImpl(repository: repository)
     }
 
-    func execute(genre: Int) async throws -> [Book] {
+    func execute(genre: Int) async throws -> [BookGridCard] {
         do {
-            return try await repository.getBooksByGenre(genre: genre)
+            return try await repository.getBooksByGenre(genre: genre).map { $0.toBookGridCard()}
         } catch {
             throw error
         }
