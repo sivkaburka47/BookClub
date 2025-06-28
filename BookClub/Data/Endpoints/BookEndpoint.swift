@@ -26,11 +26,11 @@ enum BookEndpoint: APIEndpoint {
         case .getBookById(let bookId):
             return "/books?filters[id]=\(bookId)&populate[0]=authors"
         case .findBooksByName(let name):
-            return "/books?filters[title][$containsi]=\(name)"
+            return "/books?filters[title][$containsi]=\(name)&populate[0]=authors"
         case .getBooksByGenre(let genre):
-            return "/books?filters[genres][id][$eq]=\(genre)"
+            return "/books?filters[genres][id][$eq]=\(genre)&populate[0]=authors"
         case .getBooksByAuthor(let author):
-            return "/books?filters[authors][id][$eq]=\(author)"
+            return "/books?filters[authors][id][$eq]=\(author)&populate[0]=authors"
         case .getNewBooks:
             return "/books?filters[isNew]=true&populate[0]=authors"
         case .getBookChapters(let bookId):
