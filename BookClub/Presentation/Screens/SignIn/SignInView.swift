@@ -226,8 +226,34 @@ private extension SignInView {
             let credentials = Credentials(email: email, password: password)
             try await loginUseCase.execute(request: credentials)
             isSignedIn = true
+        } catch let error as AuthError {
+            switch error {
+            case .invalidCredentials(let message):
+                errorMessage = ErrorMessage(
+                    title: "Ошибка входа",
+                    message: message == "Invalid email format" ? "Пожалуйста, введите корректный email" : "Неверный email или пароль"
+                )
+            case .networkError:
+                errorMessage = ErrorMessage(
+                    title: "Ошибка сети",
+                    message: "Не удалось подключиться к серверу. Проверьте интернет-соединение."
+                )
+            case .serverError(_, let message):
+                errorMessage = ErrorMessage(
+                    title: "Ошибка сервера",
+                    message: message
+                )
+            case .unknown:
+                errorMessage = ErrorMessage(
+                    title: "Неизвестная ошибка",
+                    message: "Произошла неизвестная ошибка. Попробуйте снова."
+                )
+            }
         } catch {
-            errorMessage = ErrorMessage(message: error.localizedDescription)
+            errorMessage = ErrorMessage(
+                title: "Ошибка",
+                message: error.localizedDescription
+            )
         }
     }
 }

@@ -25,8 +25,10 @@ final class LoginUseCaseImpl: LoginUseCase {
     func execute(request: Credentials) async throws {
         do {
             try await repository.login(credentials: request)
-        } catch {
+        } catch let error as AuthError {
             throw error
+        } catch {
+            throw AuthError.unknown(error)
         }
     }
 }
