@@ -14,7 +14,7 @@ struct BookListView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: spacing) {
             ForEach(books) { book in
-                NavigationLink(destination: MovieDetailsView()) {
+                NavigationLink(destination: MovieDetailsView(bookId: book.id)) {
                     BookRowView(book: book)
                 }
             }

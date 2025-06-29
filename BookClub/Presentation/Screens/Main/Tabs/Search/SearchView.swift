@@ -48,7 +48,7 @@ struct SearchView: View {
                 }
                 .padding(.horizontal, 16)
             }
-            .onChange(of: searchText) { newValue in
+            .onChange(of: searchText) { oldValue, newValue in
                 searchTask?.cancel()
 
                 guard !newValue.isEmpty else {
@@ -74,7 +74,6 @@ struct SearchView: View {
 
                     await searchBooks()
                 }
-
             }
         }
         .onAppear {

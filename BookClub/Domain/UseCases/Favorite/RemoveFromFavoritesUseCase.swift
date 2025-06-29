@@ -6,7 +6,7 @@
 //
 
 protocol RemoveFromFavoritesUseCase {
-    func execute(documentId: String) async throws
+    func execute(bookId: Int) async throws
 }
 
 final class RemoveFromFavoritesUseCaseImpl: RemoveFromFavoritesUseCase {
@@ -22,9 +22,17 @@ final class RemoveFromFavoritesUseCaseImpl: RemoveFromFavoritesUseCase {
         return RemoveFromFavoritesUseCaseImpl(repository: repository)
     }
 
-    func execute(documentId: String) async throws {
+    func execute(bookId: Int) async throws {
         do {
-            return try await repository.removeFromFavorites(documentId: documentId)
+            let favorites = try await repository.getFavoritesByBookId(bookId: bookId)
+            try await withThrowingTaskGroup(of: Void.self) { group in
+                for documentId in favorites {
+                    group.addTask {
+                        try await self.repository.removeFromFavorites(documentId: documentId)
+                    }
+                }
+                try await group.waitForAll()
+            }
         } catch {
             throw error
         }

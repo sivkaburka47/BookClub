@@ -19,7 +19,7 @@ struct ContentView: View {
                         switch selectedTab {
                         case .library: LibraryView()
                         case .search: SearchView()
-                        case .player: MovieDetailsView()
+                        case .player: EmptyView()
                         case .bookmarks: BookmarksView()
                         case .logout: EmptyView()
                         }

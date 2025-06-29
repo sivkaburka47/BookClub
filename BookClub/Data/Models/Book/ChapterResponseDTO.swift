@@ -29,7 +29,8 @@ extension ChapterDTO {
             id: id,
             documentId: documentId,
             title: title,
-            text: text
+            text: text,
+            order: order
         )
     }
 }

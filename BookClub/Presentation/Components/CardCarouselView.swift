@@ -24,15 +24,15 @@ struct CardCarouselView: View {
                 let size = geometry.size
 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    NavigationLink(destination: MovieDetailsView()) {
-                        HStack(spacing: Metrics.cardSpacing) {
-                            ForEach(cardsState) { card in
+                    HStack(spacing: Metrics.cardSpacing) {
+                        ForEach(cardsState) { card in
+                            NavigationLink(destination: MovieDetailsView(bookId: card.id)) {
                                 cardView(card, screenWidth: size.width)
                             }
                         }
-                        .padding(.trailing, size.width - Metrics.cardWidth)
-                        .scrollTargetLayout()
                     }
+                    .padding(.trailing, size.width - Metrics.cardWidth)
+                    .scrollTargetLayout()
                 }
                 .scrollTargetBehavior(.viewAligned)
                 .clipShape(.rect(cornerRadius: Metrics.cornerRadius))

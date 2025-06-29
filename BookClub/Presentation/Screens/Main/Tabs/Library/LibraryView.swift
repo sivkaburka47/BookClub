@@ -51,7 +51,7 @@ struct LibraryView: View {
 
                             LazyVGrid(columns: columns, spacing: 16) {
                                 ForEach(popularBooks) { card in
-                                    NavigationLink(destination: MovieDetailsView()) {
+                                    NavigationLink(destination: MovieDetailsView(bookId: card.id)) {
                                         cardView(cardImage: card.image, title: card.title, authors: card.authors)
                                     }
                                 }
@@ -92,36 +92,6 @@ private extension LibraryView {
 
 // MARK: View Components
 private extension LibraryView {
-    @ViewBuilder
-    var carouselCovers: some View {
-        GeometryReader { geometry in
-            ScrollView(.horizontal, showsIndicators: false) {
-                NavigationLink(destination: MovieDetailsView()) {
-                    HStack(spacing: 8) {
-                        ForEach(0..<newBooks.count, id: \.self) { index in
-                            let card = newBooks[index]
-
-                            ZStack(alignment: .bottomLeading) {
-                                ImageLoader(imageUrlString: card.image)
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: geometry.size.width - 112, height: 256)
-                                    .clipped()
-                                    .cornerRadius(4)
-
-                                imageText(description: card.description, title: card.title)
-                                .padding(.bottom, 16)
-                            }
-                            .frame(width: geometry.size.width - 112, height: 256)
-                        }
-                    }
-                    .scrollTargetLayout()
-                    .padding(.horizontal, 56)
-                }
-            }
-            .scrollTargetBehavior(.viewAligned)
-        }
-        .frame(height: 256)
-    }
     
     @ViewBuilder
     func imageText(description: String?, title: String) -> some View {

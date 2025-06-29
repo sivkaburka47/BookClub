@@ -13,6 +13,7 @@ enum FavoritesEndpoint: APIEndpoint {
     case getFavorites
     case addToFavorites
     case removeFromFavorites(documentId: String)
+    case getFavoritesByBookId(bookId: Int)
 
     var path: String {
         switch self {
@@ -22,6 +23,8 @@ enum FavoritesEndpoint: APIEndpoint {
             return "/favorites"
         case .removeFromFavorites(let documentId):
             return "/favorites/\(documentId)"
+        case .getFavoritesByBookId(let bookId):
+            return "/favorites?filters[bookId][$eq]=\(bookId)"
         }
     }
 
@@ -33,6 +36,8 @@ enum FavoritesEndpoint: APIEndpoint {
             return .post
         case .removeFromFavorites:
             return .delete
+        case.getFavoritesByBookId:
+            return .get
         }
     }
 

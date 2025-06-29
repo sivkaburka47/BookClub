@@ -70,7 +70,7 @@ private extension BookmarksView {
                     PlayButton()
                 }
 
-                NavigationLink(destination: MovieDetailsView()) {
+                NavigationLink(destination: MovieDetailsView(bookId: readingStatus.bookId)) {
                     HStack(spacing: 16) {
                         ImageLoader(imageUrlString: readingStatus.bookImageUrl)
                             .frame(width: 80, height: 126)

@@ -11,4 +11,5 @@ protocol FavoritesRepository {
     func getFavorites() async throws -> [Int]
     func addToFavorites(bookId: Int) async throws
     func removeFromFavorites(documentId: String) async throws
+    func getFavoritesByBookId(bookId: Int) async throws -> [String] 
 }

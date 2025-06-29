@@ -24,7 +24,7 @@ final class AddToFavoritesUseCaseImpl: AddToFavoritesUseCase {
 
     func execute(bookId: Int) async throws {
         do {
-            return try await repository.addToFavorites(bookId: bookId)
+            try await repository.addToFavorites(bookId: bookId)
         } catch {
             throw error
         }

@@ -11,7 +11,6 @@ final class FavoritesRepositoryImpl {
     init(httpClient: HTTPClient) {
         self.httpClient = httpClient
     }
-
 }
 
 extension FavoritesRepositoryImpl: FavoritesRepository {
@@ -21,6 +20,12 @@ extension FavoritesRepositoryImpl: FavoritesRepository {
         let response: FavoritesResponseDTO = try await httpClient.sendRequest(endpoint: endpoint, requestBody: nil as EmptyRequestModel?)
 
         return response.data.map { $0.bookId }
+    }
+
+    func getFavoritesByBookId(bookId: Int) async throws -> [String] {
+        let endpoint = FavoritesEndpoint.getFavoritesByBookId(bookId: bookId)
+        let response: FavoritesResponseDTO = try await httpClient.sendRequest(endpoint: endpoint, requestBody: nil as EmptyRequestModel?)
+        return response.data.map { $0.documentId }
     }
 
     func addToFavorites(bookId: Int) async throws {

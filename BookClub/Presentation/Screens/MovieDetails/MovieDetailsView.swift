@@ -8,16 +8,19 @@ import SwiftUI
 
 struct MovieDetailsView: View {
     @Environment(\.dismiss) var dismiss
-    
-    let book = BookDetails(
-        image: "bookCoverDetails",
-        title: "Код Да Винчи",
-        author: "Дэн Браун",
-        description: ["Секретный код скрыт в работах Леонардо да Винчи...", "Только он поможет найти христианские святыни, дающие немыслимые власть и могущество...", "Ключ к величайшей тайне, над которой человечество билось веками, наконец может быть найден..."],
-        activeChapter: 3,
-        chapters: ["Факты", "Пролог", "Глава 1", "Глава 2", "Глава 3", "Глава 4", "Глава 5", "Глава 6", "Глава 7"]
-    )
-    
+
+    private let getMovieDetailsUseCase: GetBookByIdUseCase = GetBookByIdUseCaseImpl.create()
+    private let removeFromFavoritesUseCase: RemoveFromFavoritesUseCase = RemoveFromFavoritesUseCaseImpl.create()
+    private let addToFavoritesUseCase: AddToFavoritesUseCase = AddToFavoritesUseCaseImpl.create()
+
+    @State private var book: BookDetails = BookDetails()
+    let bookId: Int
+
+    // MARK: - Init
+    init(bookId: Int) {
+        self.bookId = bookId
+    }
+
     var body: some View {
         ZStack {
             Color("Background")
@@ -29,6 +32,13 @@ struct MovieDetailsView: View {
             }
             .ignoresSafeArea()
         }
+        .task {
+            do {
+                book = try await getMovieDetailsUseCase.execute(bookId: bookId)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -36,6 +46,26 @@ struct MovieDetailsView: View {
             }
         }
         .toolbarBackground(.hidden, for: .navigationBar)
+    }
+}
+
+private extension MovieDetailsView {
+    func toggleFavoriteState() async {
+        if book.isFavorite {
+            do {
+                try await removeFromFavoritesUseCase.execute(bookId: book.id)
+                book.isFavorite.toggle()
+            } catch {
+                print(error.localizedDescription)
+            }
+        } else {
+            do {
+                try await addToFavoritesUseCase.execute(bookId: book.id)
+                book.isFavorite.toggle()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
 }
 
@@ -71,9 +101,11 @@ private extension MovieDetailsView {
             }
             
             Button(action: {
-                print("В избранное")
+                Task {
+                    await toggleFavoriteState()
+                }
             }, label: {
-                StyledButtonContent(text: "В избранное", icon: "Bookmarks", style: .light)
+                StyledButtonContent(text: book.isFavorite ? "Избранное" : "В избранное", icon: "Bookmarks", style: book.isFavorite ? .dark : .light)
             })
         }
         .padding(.horizontal, 16)
@@ -87,7 +119,7 @@ private extension MovieDetailsView {
             Text(book.title)
                 .h1TextStyle()
                 .foregroundColor(Color("AccentDark"))
-            Text(book.author)
+            Text(book.authors.map { $0 }.joined(separator: ", "))
                 .bodyTextStyle()
         }
     }
@@ -115,24 +147,47 @@ private extension MovieDetailsView {
     
     @ViewBuilder
     var chaptersSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Оглавление")
-                .h2TextStyle()
-            chaptersList
+        if !book.chapters.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Оглавление")
+                    .h2TextStyle()
+                chaptersList
+            }
         }
     }
     
     @ViewBuilder
     var chaptersList: some View {
+        let activeChapterId = book.activeChapter?.chapterId
+        let activeChapterValue = book.activeChapter?.value
+        let activeChapterOrder = book.chapters.first(where: { $0.id == activeChapterId })?.order
+
         VStack(spacing: 0) {
-            ForEach(book.chapters.indices, id: \.self) { index in
-                chapterRow(chapter: book.chapters[index],
-                            isActive: book.activeChapter == index,
-                            isRead: index < (book.activeChapter ?? 0))
+            ForEach(book.chapters) { chapter in
+                var isActive = chapter.id == activeChapterId
+
+                let isRead: Bool = {
+                    guard let activeOrder = activeChapterOrder else { return false }
+
+                    if chapter.order < activeOrder {
+                        return true
+                    } else if chapter.order == activeOrder {
+                        isActive = false
+                        return (activeChapterValue == 100)
+                    } else {
+                        return false
+                    }
+                }()
+
+                chapterRow(
+                    chapter: chapter.title,
+                    isActive: isActive,
+                    isRead: isRead
+                )
             }
         }
     }
-    
+
     @ViewBuilder
     func chapterRow(chapter: String, isActive: Bool, isRead: Bool) -> some View {
         HStack {
@@ -152,8 +207,4 @@ private extension MovieDetailsView {
         .padding(.vertical, 8)
     }
     
-}
-
-#Preview {
-    MovieDetailsView()
 }
