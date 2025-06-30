@@ -18,7 +18,7 @@ struct BookmarksView: View {
     @State private var books: [BookGridCard] = []
 
     @State private var quotes: [Quote] = []
-
+  
     var body: some View {
         ZStack {
             Color("Background")
