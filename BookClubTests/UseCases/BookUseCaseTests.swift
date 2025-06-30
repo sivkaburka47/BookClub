@@ -2,7 +2,7 @@
 //  BookUseCaseTests.swift
 //  BookClubTests
 //
-//  Created by Test on 22.06.2025.
+//  Created by Станислав Дейнекин on 30.06.2025.
 //
 
 import XCTest
