@@ -246,4 +246,4 @@ final class MetaUseCaseTests: XCTestCase {
         XCTAssertEqual(result[1].id, 1)
         XCTAssertNotEqual(result[0].name, result[1].name)
     }
-} 
+}

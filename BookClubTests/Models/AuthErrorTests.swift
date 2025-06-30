@@ -186,4 +186,4 @@ final class AuthErrorTests: XCTestCase {
             XCTFail("Expected serverError case")
         }
     }
-} 
+}
