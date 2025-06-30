@@ -23,7 +23,7 @@ struct Book: Identifiable {
     init(id: Int = 0,
          documentId: String = "",
          title: String = "",
-         coverImageUrl: String?,
+         coverImageUrl: String? = nil,
          createdAt: Date = Date(),
          updatedAt: Date = Date(),
          publishedAt: Date = Date(),
