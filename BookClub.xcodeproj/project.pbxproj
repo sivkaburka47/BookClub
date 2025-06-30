@@ -6,8 +6,24 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E62625B62E06BF09008FFC07 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = E62625B52E06BF09008FFC07 /* KeychainAccess */; };
+		E681FDB62E06AF0400ECD62B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = E681FDB52E06AF0400ECD62B /* Alamofire */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E6D883F72E1285D400481B97 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E6D4EDF32D84AB0B0034B524 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6D4EDFA2D84AB0B0034B524;
+			remoteInfo = BookClub;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		E6D4EDFB2D84AB0B0034B524 /* BookClub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookClub.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6D883F32E1285D400481B97 /* BookClubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BookClubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -29,10 +45,24 @@
 			path = BookClub;
 			sourceTree = "<group>";
 		};
+		E6D883F42E1285D400481B97 /* BookClubTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BookClubTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E6D4EDF82D84AB0B0034B524 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E62625B62E06BF09008FFC07 /* KeychainAccess in Frameworks */,
+				E681FDB62E06AF0400ECD62B /* Alamofire in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6D883F02E1285D400481B97 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				E6D4EDFD2D84AB0B0034B524 /* BookClub */,
+				E6D883F42E1285D400481B97 /* BookClubTests */,
 				E6D4EDFC2D84AB0B0034B524 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				E6D4EDFB2D84AB0B0034B524 /* BookClub.app */,
+				E6D883F32E1285D400481B97 /* BookClubTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -79,10 +111,35 @@
 			);
 			name = BookClub;
 			packageProductDependencies = (
+				E681FDB52E06AF0400ECD62B /* Alamofire */,
+				E62625B52E06BF09008FFC07 /* KeychainAccess */,
 			);
 			productName = BookClub;
 			productReference = E6D4EDFB2D84AB0B0034B524 /* BookClub.app */;
 			productType = "com.apple.product-type.application";
+		};
+		E6D883F22E1285D400481B97 /* BookClubTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E6D883F92E1285D400481B97 /* Build configuration list for PBXNativeTarget "BookClubTests" */;
+			buildPhases = (
+				E6D883EF2E1285D400481B97 /* Sources */,
+				E6D883F02E1285D400481B97 /* Frameworks */,
+				E6D883F12E1285D400481B97 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E6D883F82E1285D400481B97 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				E6D883F42E1285D400481B97 /* BookClubTests */,
+			);
+			name = BookClubTests;
+			packageProductDependencies = (
+			);
+			productName = BookClubTests;
+			productReference = E6D883F32E1285D400481B97 /* BookClubTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -91,11 +148,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1620;
+				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					E6D4EDFA2D84AB0B0034B524 = {
 						CreatedOnToolsVersion = 16.2;
+					};
+					E6D883F22E1285D400481B97 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = E6D4EDFA2D84AB0B0034B524;
 					};
 				};
 			};
@@ -109,6 +170,8 @@
 			mainGroup = E6D4EDF22D84AB0B0034B524;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				E681FDB42E06AF0400ECD62B /* XCRemoteSwiftPackageReference "Alamofire" */,
+				E62625B42E06BF09008FFC07 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E6D4EDFC2D84AB0B0034B524 /* Products */;
@@ -116,12 +179,20 @@
 			projectRoot = "";
 			targets = (
 				E6D4EDFA2D84AB0B0034B524 /* BookClub */,
+				E6D883F22E1285D400481B97 /* BookClubTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		E6D4EDF92D84AB0B0034B524 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6D883F12E1285D400481B97 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -158,7 +229,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E6D883EF2E1285D400481B97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E6D883F82E1285D400481B97 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6D4EDFA2D84AB0B0034B524 /* BookClub */;
+			targetProxy = E6D883F72E1285D400481B97 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		E6D4EE072D84AB0E0034B524 /* Debug */ = {
@@ -295,6 +381,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
@@ -330,6 +417,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
@@ -347,6 +435,46 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		E6D883FA2E1285D400481B97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = T77L9FD3JY;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.icodelessons.BookClubTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BookClub.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BookClub";
+			};
+			name = Debug;
+		};
+		E6D883FB2E1285D400481B97 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = T77L9FD3JY;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.icodelessons.BookClubTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BookClub.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/BookClub";
 			};
 			name = Release;
 		};
@@ -371,7 +499,48 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		E6D883F92E1285D400481B97 /* Build configuration list for PBXNativeTarget "BookClubTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6D883FA2E1285D400481B97 /* Debug */,
+				E6D883FB2E1285D400481B97 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E62625B42E06BF09008FFC07 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		E681FDB42E06AF0400ECD62B /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E62625B52E06BF09008FFC07 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E62625B42E06BF09008FFC07 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+		E681FDB52E06AF0400ECD62B /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E681FDB42E06AF0400ECD62B /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E6D4EDF32D84AB0B0034B524 /* Project object */;
 }

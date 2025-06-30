@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" spacing="36" translatesAutoresizingMaskIntoConstraints="NO" id="uZx-Gm-zcv">
+                                <rect key="frame" x="48" y="142.66666666666669" width="297" height="625.33333333333326"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="DZa-aA-WbZ">
+                                        <rect key="frame" x="0.0" y="0.0" width="297" height="625.33333333333337"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="MainIcon" translatesAutoresizingMaskIntoConstraints="NO" id="5ZA-Li-C60">
+                                                <rect key="frame" x="0.0" y="0.0" width="297" height="512"/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Book Club" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jin-9h-aAT">
+                                                <rect key="frame" x="0.0" y="528" width="297" height="57.333333333333371"/>
+                                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="48"/>
+                                                <color key="textColor" name="AccentLight"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="открой для себя книжный мир" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R88-Ol-Yt1">
+                                                <rect key="frame" x="0.0" y="601.33333333333337" width="297" height="24"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <color key="textColor" name="AccentMedium"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
+                        <color key="backgroundColor" name="AccentDark"/>
+                        <constraints>
+                            <constraint firstItem="uZx-Gm-zcv" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="6h2-Lo-2j1"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="uZx-Gm-zcv" secondAttribute="bottom" constant="16" id="N7r-Pc-iKI"/>
+                            <constraint firstAttribute="trailing" secondItem="uZx-Gm-zcv" secondAttribute="trailing" constant="48" id="NhU-ew-9Wm"/>
+                            <constraint firstItem="uZx-Gm-zcv" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="48" id="zz9-VJ-eAL"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53" y="375"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="MainIcon" width="512" height="512"/>
+        <namedColor name="AccentDark">
+            <color red="0.078431372549019607" green="0.27843137254901962" blue="0.32156862745098042" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="AccentLight">
+            <color red="0.85882352941176465" green="0.92549019607843142" blue="0.94117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="AccentMedium">
+            <color red="0.63921568627450975" green="0.74117647058823533" blue="0.76078431372549016" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

@@ -1,0 +1,60 @@
+//
+//  BookEndpoint.swift
+//  BookClub
+//
+//  Created by Станислав Дейнекин on 21.06.2025.
+//
+
+import Foundation
+import Alamofire
+import KeychainAccess
+
+enum BookEndpoint: APIEndpoint {
+    case getBooks(page: Int = 1, pageSize: Int = 1000)
+    case getBookById(bookId: Int)
+    case findBooksByName(name: String)
+    case getBooksByGenre(genre: Int)
+    case getBooksByAuthor(author: Int)
+    case getNewBooks
+    case getBookChapters(bookId: Int)
+    case getChapterWithBook(chapterId: Int)
+
+    var path: String {
+        switch self {
+        case .getBooks(let page, let pageSize):
+            return "/books?pagination[page]=\(page)&pagination[pageSize]=\(pageSize)&populate[0]=authors"
+        case .getBookById(let bookId):
+            return "/books?filters[id]=\(bookId)&populate[0]=authors"
+        case .findBooksByName(let name):
+            return "/books?filters[title][$containsi]=\(name)&populate[0]=authors"
+        case .getBooksByGenre(let genre):
+            return "/books?filters[genres][id][$eq]=\(genre)&populate[0]=authors"
+        case .getBooksByAuthor(let author):
+            return "/books?filters[authors][id][$eq]=\(author)&populate[0]=authors"
+        case .getNewBooks:
+            return "/books?filters[isNew]=true&populate[0]=authors"
+        case .getBookChapters(let bookId):
+            return "/chapters?filters[book][id][$eq]=\(bookId)"
+        case .getChapterWithBook(let chapterId):
+            return "/chapters?filters[id][$eq]=\(chapterId)&populate[0]=book"
+        }
+    }
+
+    var method: Alamofire.HTTPMethod {
+        return .get
+    }
+
+    var parameters: Alamofire.Parameters? {
+        return nil
+    }
+
+    var headers: Alamofire.HTTPHeaders? {
+        guard let token = authToken else { return nil }
+        return ["Authorization": "Bearer \(token)"]
+    }
+
+    private var authToken: String? {
+        let keychain = Keychain()
+        return try? keychain.get("authToken")
+    }
+}

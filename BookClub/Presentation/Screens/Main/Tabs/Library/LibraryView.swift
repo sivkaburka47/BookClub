@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct LibraryView: View {
+
+    let getBookCardsUseCase: GetBookCardsUseCase = GetBookCardsUseCaseImpl.create()
+    let getNewBooksUseCase: GetNewBooksUseCase = GetNewBooksUseCaseImpl.create()
+
     @State private var scrollPosition: Int?
     
     var columns: [GridItem] = [
@@ -15,26 +19,11 @@ struct LibraryView: View {
         GridItem(.flexible(), spacing: 16),
         GridItem(.flexible())
     ]
-    
-    let carouselCards: [BookCard] = [
-        BookCard(image: "bookCover1", title: "Рассвет хайпа", authors: ["Эрик Мария Ремарк"], description: "Долгожданное продолжение Голодных игр"),
-        BookCard(image: "bookCoverDetails", title: "Хайп окончен", authors: ["Эрик Мария Ремарк"], description: "НеДолгожданное продолжение Голодных игр"),
-        BookCard(image: "bookCover8", title: "Дедлайн близко", authors: ["Эрик Мария Ремарк"], description: "Долгожданное продолжение Голодных игр"),
-        BookCard(image: "bookCover9", title: "Крутая история", authors: ["Эрик Мария Ремарк"], description: "Долгожданное окончание Голодных игр")
-    ]
-    
-    let cards: [BookCard] = [
-        BookCard(image: "bookCover1", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
-        BookCard(image: "bookCover2", title: "Мастер и Маргарита", authors: ["Михаил Булгаков", "Эрик Мария Ремарк"]),
-        BookCard(image: "bookCover3", title: "Преступление и наказание", authors: ["Фёдор Достоевский"]),
-        BookCard(image: "bookCover4", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
-        BookCard(image: "bookCover5", title: "Мастер и Маргарита", authors: ["Михаил Булгаков"]),
-        BookCard(image: "bookCover6", title: "Преступление и наказание", authors: ["Фёдор Достоевский"]),
-        BookCard(image: "bookCover7", title: "Понедельник начинается в субботу", authors: ["Эрик Мария Ремарк"]),
-        BookCard(image: "bookCover8", title: "Мастер и Маргарита", authors: ["Михаил Булгаков"]),
-        BookCard(image: "bookCover9", title: "Преступление и наказание", authors: ["Фёдор Достоевский", "Эрик Мария Ремарк"])
-    ]
-    
+
+    @State private var newBooks: [FeaturedBookCard] = []
+    @State private var popularBooks: [BookGridCard] = []
+    @State private var isLoading: Bool = false
+
     var body: some View {
         ZStack {
             Color("Background")
@@ -46,21 +35,25 @@ struct LibraryView: View {
                         .h1TextStyle()
                         .foregroundColor(Color("Secondary"))
                     
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Новинки")
-                            .h2TextStyle()
-                        
-                        carouselCovers
+                    if !newBooks.isEmpty {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Новинки")
+                                .h2TextStyle()
+
+                            CardCarouselView(cards: newBooks)
+                        }
                     }
-                    
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Популярные книги")
-                            .h2TextStyle()
-                        
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(cards) { card in
-                                NavigationLink(destination: MovieDetailsView()) {
-                                    cardView(cardImage: card.image, title: card.title, authors: card.authors)
+
+                    if !popularBooks.isEmpty {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Популярные книги")
+                                .h2TextStyle()
+
+                            LazyVGrid(columns: columns, spacing: 16) {
+                                ForEach(popularBooks) { card in
+                                    NavigationLink(destination: MovieDetailsView(bookId: card.id)) {
+                                        cardView(cardImage: card.image, title: card.title, authors: card.authors)
+                                    }
                                 }
                             }
                         }
@@ -69,44 +62,36 @@ struct LibraryView: View {
                 }
                 .padding(.horizontal, 16)
             }
+            .refreshable {
+                await loadBooks()
+            }
         }
         .toolbar(.hidden, for: .navigationBar)
+        .task {
+            await loadBooks()
+        }
+    }
+}
+
+private extension LibraryView {
+    private func loadBooks() async {
+        isLoading = true
+        do {
+            async let newBooksTask = getNewBooksUseCase.execute()
+            async let popularBooksTask = getBookCardsUseCase.execute()
+
+            newBooks = try await newBooksTask
+            popularBooks = try await popularBooksTask
+
+        } catch {
+            print(error.localizedDescription)
+        }
+        isLoading = false
     }
 }
 
 // MARK: View Components
 private extension LibraryView {
-    @ViewBuilder
-    var carouselCovers: some View {
-        GeometryReader { geometry in
-            ScrollView(.horizontal, showsIndicators: false) {
-                NavigationLink(destination: MovieDetailsView()) {
-                    HStack(spacing: 8) {
-                        ForEach(0..<carouselCards.count, id: \.self) { index in
-                            let card = carouselCards[index]
-                            
-                            ZStack(alignment: .bottomLeading) {
-                                Image(card.image)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: geometry.size.width - 112, height: 256)
-                                    .clipped()
-                                    .cornerRadius(4)
-                                
-                                imageText(description: card.description, title: card.title)
-                                .padding(.bottom, 16)
-                            }
-                            .frame(width: geometry.size.width - 112, height: 256)
-                        }
-                    }
-                    .scrollTargetLayout()
-                    .padding(.horizontal, 56)
-                }
-            }
-            .scrollTargetBehavior(.viewAligned)
-        }
-        .frame(height: 256)
-    }
     
     @ViewBuilder
     func imageText(description: String?, title: String) -> some View {
@@ -126,7 +111,7 @@ private extension LibraryView {
     }
     
     @ViewBuilder
-    func cardView(cardImage: String, title: String, authors: [String]) -> some View {
+    func cardView(cardImage: String, title: String, authors: [Author]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             imageSection(imageName: cardImage)
             textContentSection(title: title, authors: authors)
@@ -136,15 +121,14 @@ private extension LibraryView {
     
     @ViewBuilder
     func imageSection(imageName: String) -> some View {
-        Image(imageName)
-            .resizable()
+        ImageLoader(imageUrlString: imageName)
             .aspectRatio(contentMode: .fit)
             .clipped()
             .cornerRadius(4)
     }
     
     @ViewBuilder
-    func textContentSection(title: String, authors: [String]) -> some View {
+    func textContentSection(title: String, authors: [Author]) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             titleLabel(text: title)
             authorsLabel(authors: authors)
@@ -162,11 +146,12 @@ private extension LibraryView {
     }
     
     @ViewBuilder
-    func authorsLabel(authors: [String]) -> some View {
-        Text(authors.joined(separator: ", "))
+    func authorsLabel(authors: [Author]) -> some View {
+        Text(authors.map { $0.name }.joined(separator: ", "))
             .footnoteTextStyle()
             .frame(maxWidth: .infinity, alignment: .leading)
     }
+
 }
 
 #Preview {

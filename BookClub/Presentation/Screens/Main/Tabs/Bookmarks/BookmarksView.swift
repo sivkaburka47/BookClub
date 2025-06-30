@@ -8,27 +8,17 @@
 import SwiftUI
 
 struct BookmarksView: View {
-    let book = BookDetails(
-        image: "book",
-        title: "Код Да Винчи",
-        author: "bebrik",
-        activeChapter: 0,
-        chapters: ["Пролог", "Глава 1", "Глава 2", "Глава 3"]
-    )
-    
-    @State private var books = [
-        BookCard(image: "bookCover1", title: "Пикник на обочине", authors: ["Братья Стругацкие", "Альберт Эйнштейн"]),
-        BookCard(image: "bookCover2", title: "Код да Винчи", authors: ["Дэн Браун"]),
-        BookCard(image: "bookCover3", title: "Преступление и наказание", authors: ["Федор Достоевский", "Альберт Эйнштейн", "Дэн Браун"]),
-        BookCard(image: "bookCover4", title: "Мир как он есть", authors: ["Альберт Эйнштейн"]),
-        BookCard(image: "bookCover5", title: "Война и мир", authors: ["Лев Толстой"])
-    ]
-    
-    @State private var quotes = [
-        Quote(text: "Я все еще жив", bookTitle: "Код Да Винчи", author: "Дэн Браун"),
-        Quote(text: "Высокий, широкоплечий, с мертвенно-бледной кожей и редкими белыми волосами", bookTitle: "Код Да Винчи", author: "Дэн Браун")
-    ]
-    
+
+    let getFavoritesUseCase: GetFavoritesUseCase = GetFavoritesUseCaseImpl.create()
+    let getQuotesUseCase: GetQuotesUseCase = GetQuotesUseCaseImpl.create()
+    let getProgressUseCase: GetProgressUseCase = GetProgressUseCaseImpl.create()
+
+    @State private var readingStatus: ReadingStatus?
+
+    @State private var books: [BookGridCard] = []
+
+    @State private var quotes: [Quote] = []
+  
     var body: some View {
         ZStack {
             Color("Background")
@@ -49,6 +39,21 @@ struct BookmarksView: View {
                 .padding(.horizontal, 16)
             }
         }
+        .task {
+            do {
+                async let quotesTask = getQuotesUseCase.execute()
+                async let booksTask = getFavoritesUseCase.execute()
+                async let readingStatusTask = getProgressUseCase.execute()
+
+                quotes = try await quotesTask
+                books = try await booksTask
+                readingStatus = try await readingStatusTask
+
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+
     }
 }
 
@@ -56,20 +61,24 @@ struct BookmarksView: View {
 private extension BookmarksView {
     @ViewBuilder
     var currentReadingSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text("Читаете сейчас")
-                    .h2TextStyle()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                PlayButton()
-            }
-            
-            NavigationLink(destination: MovieDetailsView()) {
-                HStack(spacing: 16) {
-                    BookCover(image: book.image)
-                    VStack(alignment: .leading, spacing: 16) {
-                        bookInfo(for: book)
-                        ProgressLine(progress: book.progress)
+        if let readingStatus {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Читаете сейчас")
+                        .h2TextStyle()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    PlayButton()
+                }
+
+                NavigationLink(destination: MovieDetailsView(bookId: readingStatus.bookId)) {
+                    HStack(spacing: 16) {
+                        ImageLoader(imageUrlString: readingStatus.bookImageUrl)
+                            .frame(width: 80, height: 126)
+                            .cornerRadius(4)
+                        VStack(alignment: .leading, spacing: 16) {
+                            bookInfo(for: readingStatus)
+                            ProgressLine(progress: readingStatus.normalizedProgress)
+                        }
                     }
                 }
             }
@@ -112,7 +121,7 @@ private extension BookmarksView {
             Text(quote.text)
                 .quoteTextStyle()
             
-            Text("\(quote.bookTitle) • \(quote.author)")
+            Text("\(quote.bookTitle) • \(quote.authors.map(\.name).joined(separator: ", "))")
                 .footnoteTextStyle()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -123,18 +132,14 @@ private extension BookmarksView {
     }
     
     @ViewBuilder
-    func bookInfo(for book: BookDetails) -> some View {
+    func bookInfo(for book: ReadingStatus) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(book.title)
+            Text(book.bookTitle)
                 .h2TextStyle()
-            Text(book.currentChapter)
+            Text(book.chapterTitle)
                 .font(Font.custom("VelaSans-Bold", size: 14))
                 .bodySmallTextStyle()
         }
     }
     
-}
-
-#Preview {
-    BookmarksView()
 }

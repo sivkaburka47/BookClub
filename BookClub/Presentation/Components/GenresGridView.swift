@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct GenresGridView: View {
-    let genres: [String]
-    var onGenreSelected: (String) -> Void
+    let genres: [Genre]
+    var onGenreSelected: (Genre) -> Void
     @State private var rowHeights: [Int: CGFloat] = [:]
     
     var body: some View {
@@ -22,7 +22,7 @@ struct GenresGridView: View {
                 let genre = item.element
                 let rowIndex = index / columns.count
                 
-                Text(genre)
+                Text(genre.name)
                     .bodySmallTextStyle()
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(16)

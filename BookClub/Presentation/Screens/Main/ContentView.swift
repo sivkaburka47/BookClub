@@ -6,41 +6,60 @@
 //
 
 import SwiftUI
+import KeychainAccess
 
 struct ContentView: View {
-    @State private var isSignedIn = true
+    @State private var isSignedIn = false
     @State private var selectedTab: Tab = .library
-    
-    var body: some View {
-        if isSignedIn {
-            NavigationView {
-                ZStack {
-                    Group {
-                        switch selectedTab {
-                        case .library: LibraryView()
-                        case .search: SearchView()
-                        case .player: MovieDetailsView()
-                        case .bookmarks: BookmarksView()
-                        case .logout: EmptyView()
-                        }
-                    }
-                    
-                    VStack {
-                        Spacer()
-                        CustomTabBar(selectedTab: $selectedTab) {
-                            isSignedIn = false
-                            selectedTab = .library
-                        }
-                    }
-                }
-                .toolbarBackground(.hidden, for: .navigationBar)
-            }
+
+    private func checkToken() {
+        let keychain = Keychain()
+        if keychain["authToken"] != nil {
+            isSignedIn = true
         } else {
-            SignInView(isSignedIn: $isSignedIn)
+            isSignedIn = false
         }
     }
-}
 
-#Preview {
-    ContentView()
+    var body: some View {
+        Group {
+            if isSignedIn {
+                NavigationView {
+                    ZStack {
+                        Group {
+                            switch selectedTab {
+                            case .library: LibraryView()
+                            case .search: SearchView()
+                            case .player: EmptyView()
+                            case .bookmarks: BookmarksView()
+                            case .logout:
+                                Color.clear
+                                    .onAppear {
+                                        let keychain = Keychain()
+                                        try? keychain.remove("authToken")
+                                        isSignedIn = false
+                                        selectedTab = .library
+                                    }
+                            }
+                        }
+
+                        VStack {
+                            Spacer()
+                            CustomTabBar(selectedTab: $selectedTab) {
+                                let keychain = Keychain()
+                                try? keychain.remove("authToken")
+                                isSignedIn = false
+                                selectedTab = .library
+                            }
+                        }
+                        .ignoresSafeArea(.keyboard)
+                    }
+                    .toolbarBackground(.hidden, for: .navigationBar)
+                }
+            } else {
+                SignInView(isSignedIn: $isSignedIn)
+            }
+        }
+        .onAppear(perform: checkToken)
+    }
 }

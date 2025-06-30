@@ -8,36 +8,24 @@
 import SwiftUI
 
 struct SearchView: View {
+
+    let getGenresUseCase: GetGenresUseCase = GetGenresUseCaseImpl.create()
+    let getAuthorsUseCase: GetAuthorsUseCase = GetAuthorsUseCaseImpl.create()
+    let getBookByNameUseCase: GetBookByNameUseCase = GetBookByNameUseCaseImpl.create()
+    let getBooksByAuthorUseCase: GetBooksByAuthorUseCase = GetBooksByAuthorUseCaseImpl.create()
+    let getBooksByGenreUseCase: GetBooksByGenreUseCase = GetBooksByGenreUseCaseImpl.create()
+
+    @AppStorage("recentSearches") private var recentSearchesData: String = "[]"
+    @State private var recentSearches: [String] = []
+    @State private var searchTask: Task<Void, Never>? = nil
+    @State private var matchedGenreIds: [Int] = []
+    @State private var matchedAuthorIds: [Int] = []
+
     @State private var searchText: String = ""
-    
-    let genres = [
-        "Классика", "Фэнтези", "Фантастика", "Детектив",
-        "Триллер", "Исторический роман", "Любовный роман", "Приключения",
-        "Поэзия", "Биография", "Для подростков", "Для детей"
-    ]
-    
-    @State private var recentRequests = ["Android", "iOS", "Windows", "Linux", "MacOS"]
-    
-    @State private var authors = [
-        Author(image: "authorAvatar1", name: "Братья Стругацкие"),
-        Author(image: "authorAvatar2", name: "Дэн Браун"),
-        Author(image: "authorAvatar3", name: "Федор Достоевский"),
-        Author(image: "authorAvatar1", name: "Альберт Эйнштейн"),
-        Author(image: "authorAvatar2", name: "Лев Толстой")
-    ]
-    
-    @State private var books = [
-        BookCard(image: "bookCover1", title: "Программирование на SWIFT для IOS", authors: ["Братья Стругацкие"], genres: ["Фантастика", "Приключения"]),
-        BookCard(image: "bookCover2", title: "Код да Винчи", authors: ["Дэн Браун"], genres: ["Детектив", "Триллер"]),
-        BookCard(image: "bookCover3", title: "Преступление и наказание", authors: ["Федор Достоевский"], genres: ["Классика", "Детектив"]),
-        BookCard(image: "bookCover4", title: "Мир как он есть", authors: ["Альберт Эйнштейн"], genres: ["Биография", "Научпоп"]),
-        BookCard(image: "bookCover5", title: "Война и мир", authors: ["Лев Толстой"], genres: ["Классика", "Исторический роман"]),
-        BookCard(image: "bookCover6", title: "Гарри Поттер и философский камень", authors: ["Джоан Роулинг"], genres: ["Фэнтези", "Приключения"]),
-        BookCard(image: "bookCover7", title: "Шерлок Холмс", authors: ["Артур Конан Дойл"], genres: ["Детектив", "Классика"]),
-        BookCard(image: "bookCover8", title: "1984", authors: ["Джордж Оруэлл"], genres: ["Фантастика", "Антиутопия"]),
-        BookCard(image: "bookCover9", title: "Анна Каренина", authors: ["Лев Толстой"], genres: ["Классика", "Любовный роман"]),
-        BookCard(image: "bookCover1", title: "Дюна", authors: ["Фрэнк Герберт"], genres: ["Фантастика", "Приключения"])
-    ]
+    @State private var genres: [Genre] = []
+    @State private var authors: [Author] = []
+
+    @State private var books: [BookGridCard] = []
 
     var body: some View {
         ZStack {
@@ -47,7 +35,7 @@ struct SearchView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     CustomSearchBar(text: $searchText)
-                    
+
                     if searchText.isEmpty {
                         recentRequestsSection
                         genresSection
@@ -55,24 +43,146 @@ struct SearchView: View {
                     } else {
                         booksSection
                     }
-                    
+
                     Spacer().frame(height: 100)
                 }
                 .padding(.horizontal, 16)
             }
+            .onChange(of: searchText) { oldValue, newValue in
+                searchTask?.cancel()
+
+                guard !newValue.isEmpty else {
+                    books = []
+                    matchedGenreIds = []
+                    matchedAuthorIds = []
+                    return
+                }
+
+                searchTask = Task {
+                    try? await Task.sleep(nanoseconds: 500_000_000)
+                    guard !Task.isCancelled else { return }
+
+                    let matchedGenres = genres.filter {
+                        $0.name.lowercased().contains(newValue.lowercased())
+                    }
+                    matchedGenreIds = matchedGenres.map { $0.id }
+
+                    let matchedAuthors = authors.filter {
+                        $0.name.lowercased().contains(newValue.lowercased())
+                    }
+                    matchedAuthorIds = matchedAuthors.map { $0.id }
+
+                    await searchBooks()
+                }
+            }
+        }
+        .onAppear {
+            loadRecentSearches()
+        }
+        .task {
+            await loadMeta()
         }
     }
     
 }
 
+private extension SearchView {
+
+    private func saveSearchQuery(_ query: String) {
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        var current = recentSearches
+        current.removeAll { $0.caseInsensitiveCompare(trimmed) == .orderedSame }
+        current.insert(trimmed, at: 0)
+
+        if current.count > 6 {
+            current = Array(current.prefix(6))
+        }
+
+        recentSearches = current
+        persistSearches(current)
+    }
+
+    private func removeSearchQuery(_ query: String) {
+        var updated = recentSearches
+        updated.removeAll { $0.caseInsensitiveCompare(query) == .orderedSame }
+        recentSearches = updated
+        persistSearches(updated)
+    }
+
+    private func loadRecentSearches() {
+        if let data = recentSearchesData.data(using: .utf8),
+           let decoded = try? JSONDecoder().decode([String].self, from: data) {
+            recentSearches = decoded
+        }
+    }
+
+    private func persistSearches(_ searches: [String]) {
+        if let data = try? JSONEncoder().encode(searches),
+           let json = String(data: data, encoding: .utf8) {
+            recentSearchesData = json
+        }
+    }
+
+    @MainActor
+    private func searchBooks() async {
+        do {
+            async let booksByName = getBookByNameUseCase.execute(name: searchText)
+            async let booksByGenres = fetchBooksByGenres(ids: matchedGenreIds)
+            async let booksByAuthors = fetchBooksByAuthors(ids: matchedAuthorIds)
+
+            let (byName, byGenres, byAuthors) = try await (booksByName, booksByGenres, booksByAuthors)
+            let combinedBooks = (byName + byGenres + byAuthors)
+            let uniqueBooks = Array(Dictionary(grouping: combinedBooks, by: { $0.id }).values.compactMap { $0.first })
+
+            books = uniqueBooks
+            if !books.isEmpty {
+                saveSearchQuery(searchText)
+            }
+        } catch {
+            print("Ошибка при поиске книг: \(error.localizedDescription)")
+        }
+    }
+
+    private func fetchBooksByGenres(ids: [Int]) async throws -> [BookGridCard] {
+        var allBooks: [BookGridCard] = []
+        for id in ids {
+            let books = try await getBooksByGenreUseCase.execute(genre: id)
+            allBooks.append(contentsOf: books)
+        }
+        return allBooks
+    }
+
+    private func fetchBooksByAuthors(ids: [Int]) async throws -> [BookGridCard] {
+        var allBooks: [BookGridCard] = []
+        for id in ids {
+            let books = try await getBooksByAuthorUseCase.execute(author: id)
+            allBooks.append(contentsOf: books)
+        }
+        return allBooks
+    }
+
+    private func loadMeta() async {
+        do {
+            async let genresTask = getGenresUseCase.execute()
+            async let authorsTask = getAuthorsUseCase.execute()
+
+            genres = try await genresTask
+            authors = try await authorsTask
+
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+}
+
 // MARK: - Properties
 private extension SearchView {
-    var filteredBooks: [BookCard] {
+    var filteredBooks: [BookGridCard] {
         books.filter { book in
             let searchLowercased = searchText.lowercased()
-            return book.title.lowercased().contains(searchLowercased) ||
-                   book.authors.contains { $0.lowercased().contains(searchLowercased) } ||
-                   book.genres.contains { $0.lowercased().contains(searchLowercased) }
+            return book.title.lowercased().contains(searchLowercased)
         }
     }
 }
@@ -87,7 +197,7 @@ private extension SearchView {
                     Text("Жанры")
                         .h2TextStyle()
                     GenresGridView(genres: genres) { selectedGenre in
-                        searchText = selectedGenre
+                        searchText = selectedGenre.name
                     }
                 }
             }
@@ -97,12 +207,12 @@ private extension SearchView {
     @ViewBuilder
     var recentRequestsSection: some View {
         Group {
-            if !recentRequests.isEmpty {
+            if !recentSearches.isEmpty {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Недавние запросы")
                         .h2TextStyle()
                     VStack(alignment: .leading, spacing: 8) {
-                        ForEach(recentRequests, id: \.self) { request in
+                        ForEach(recentSearches, id: \.self) { request in
                             recentRequestRow(for: request)
                         }
                     }
@@ -121,7 +231,7 @@ private extension SearchView {
             CustomIcon(name: "Close", size: 24, color: Color("AccentDark"))
                 .padding(8)
                 .onTapGesture {
-                    recentRequests.removeAll { $0 == request }
+                    removeSearchQuery(request)
                 }
         }
         .padding(.leading, 16)
@@ -158,8 +268,7 @@ private extension SearchView {
     @ViewBuilder
     func authorRowView(for author: Author) -> some View {
         HStack(alignment: .center, spacing: 12) {
-            Image(author.image)
-                .resizable()
+            ImageLoader(imageUrlString: author.image)
                 .frame(width: 48, height: 48)
                 .clipShape(Circle())
             
@@ -175,10 +284,6 @@ private extension SearchView {
     
     @ViewBuilder
     var booksSection: some View {
-        BookListView(books: filteredBooks, spacing: 16)
+        BookListView(books: books, spacing: 16)
     }
-}
-
-#Preview {
-    SearchView()
 }

@@ -15,8 +15,7 @@ struct BookCoverHeader: View {
             let offsetY = geometry.frame(in: .global).minY
             let height = UIScreen.main.bounds.width * 0.93 + (offsetY > 0 ? offsetY : 0)
             
-            Image(image)
-                .resizable()
+            ImageLoader(imageUrlString: image)
                 .scaledToFill()
                 .frame(width: UIScreen.main.bounds.width, height: height)
                 .clipped()

@@ -7,6 +7,11 @@
 import SwiftUI
 
 struct SignInView: View {
+    let loginUseCase: LoginUseCase = LoginUseCaseImpl.create()
+
+    @State private var isLoading = false
+    @State private var errorMessage: ErrorMessage?
+
     @State private var offset: CGFloat = 0
     @State private var keyboardHeight: CGFloat = 0
     let bookCovers = ["bookCover1", "bookCover2", "bookCover3", "bookCover4", "bookCover5", "bookCover6", "bookCover7", "bookCover8", "bookCover9",]
@@ -142,15 +147,22 @@ private extension SignInView {
     var signInButton: some View {
         HStack {
             Button(action: {
-                isSignedIn = true
+                Task {
+                    await handleSignIn()
+                }
             }, label: {
-                Text("Войти")
-                    .font(Font.custom("VelaSans-Bold", size: 16))
-                    .foregroundColor(isFormValid ? Color("AccentDark") : Color("AccentLight"))
-                    .bodyTextStyle()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                if isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                } else {
+                    Text("Войти")
+                        .font(Font.custom("VelaSans-Bold", size: 16))
+                        .foregroundColor(isFormValid ? Color("AccentDark") : Color("AccentLight"))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                }
             })
-            .disabled(!isFormValid)
+            .disabled(!isFormValid || isLoading)
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
             .background(isFormValid ? Color("White") : Color("AccentMedium"))
@@ -158,8 +170,16 @@ private extension SignInView {
         }
         .padding(.horizontal, 16)
         .frame(height: 50)
+        .alert(item: $errorMessage) { message in
+            Alert(
+                title: Text("Ошибка"),
+                message: Text(message.message),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+
     }
-    
+
     @ViewBuilder
     var formView: some View {
         VStack(spacing: 0) {
@@ -172,7 +192,7 @@ private extension SignInView {
         .background(RoundedRectangle(cornerRadius: 10).stroke(Color("AccentMedium"), lineWidth: 1))
         .padding(.horizontal, 16)
     }
-    
+
     @ViewBuilder
     var headerSection: some View {
         VStack(alignment: .leading, spacing: -16) {
@@ -196,6 +216,43 @@ private extension SignInView {
     }
 }
 
-#Preview {
-    SignInView(isSignedIn: .constant(false))
+private extension SignInView {
+    func handleSignIn() async {
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let credentials = Credentials(email: email, password: password)
+            try await loginUseCase.execute(request: credentials)
+            isSignedIn = true
+        } catch let error as AuthError {
+            switch error {
+            case .invalidCredentials(let message):
+                errorMessage = ErrorMessage(
+                    title: "Ошибка входа",
+                    message: message == "Invalid email format" ? "Пожалуйста, введите корректный email" : "Неверный email или пароль"
+                )
+            case .networkError:
+                errorMessage = ErrorMessage(
+                    title: "Ошибка сети",
+                    message: "Не удалось подключиться к серверу. Проверьте интернет-соединение."
+                )
+            case .serverError(_, let message):
+                errorMessage = ErrorMessage(
+                    title: "Ошибка сервера",
+                    message: message
+                )
+            case .unknown:
+                errorMessage = ErrorMessage(
+                    title: "Неизвестная ошибка",
+                    message: "Произошла неизвестная ошибка. Попробуйте снова."
+                )
+            }
+        } catch {
+            errorMessage = ErrorMessage(
+                title: "Ошибка",
+                message: error.localizedDescription
+            )
+        }
+    }
 }
